@@ -1,0 +1,28 @@
+channels:
+- id: hr-hrt1
+  name: HRT 1
+  country: HR
+  group: Generalista
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/hrt1/browser-HLS8/hrt1.m3u8
+  country_name: Croacia
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/hr/default.png
+- id: hr-hrt2
+  name: HRT 2
+  country: HR
+  group: Generalista
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/hrt2/browser-HLS8/hrt2.m3u8
+  country_name: Croacia
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/hr/default.png
+- id: hr-hrt3
+  name: HRT 3
+  country: HR
+  group: Cultura
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/hrt3/browser-HLS8/hrt3.m3u8
+  country_name: Croacia
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/hr/default.png

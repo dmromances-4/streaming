@@ -1,0 +1,12 @@
+title_id: series-american-mad-men
+cocktails:
+  - id: old-fashioned
+    name: Old Fashioned
+    ingredients: [whisky, azucar, angostura, vermut]
+    scene: "El Old Fashioned de Don Draper"
+    timestamp_seconds: 900
+    recipe:
+      - "2 cl bourbon o rye"
+      - "1 terrón azúcar"
+      - "2 dashes Angostura"
+      - "Decorar con piel de naranja"

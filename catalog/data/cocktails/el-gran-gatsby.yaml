@@ -1,0 +1,11 @@
+title_id: movie-american-el-gran-gatsby
+cocktails:
+  - id: champagne-cocktail
+    name: Champagne Cocktail
+    ingredients: [champagne, azucar, angostura]
+    scene: "Fiestas de los años 20"
+    timestamp_seconds: 2700
+    recipe:
+      - "1 terrón azúcar con Angostura"
+      - "Top con champagne frío"
+      - "Decorar con piel de limón"

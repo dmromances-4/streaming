@@ -1,0 +1,12 @@
+title_id: movie-american-casablanca
+cocktails:
+  - id: french-75
+    name: French 75
+    ingredients: [gin, champagne, limon]
+    scene: "Ambiente del Rick's Café"
+    timestamp_seconds: 2400
+    recipe:
+      - "3 cl gin"
+      - "1 cl zumo de limón"
+      - "0.5 cl jarabe simple"
+      - "Top con champagne"

@@ -1,0 +1,19 @@
+channels:
+- id: si-rtvslo1
+  name: RTV SLO 1
+  country: SI
+  group: Generalista
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/rtvslo1/browser-HLS8/rtvslo1.m3u8
+  country_name: Eslovenia
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/si/default.png
+- id: si-rtvslo2
+  name: RTV SLO 2
+  country: SI
+  group: Generalista
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/rtvslo2/browser-HLS8/rtvslo2.m3u8
+  country_name: Eslovenia
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/si/default.png

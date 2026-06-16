@@ -1,0 +1,19 @@
+channels:
+- id: sk-stv1
+  name: STV1
+  country: SK
+  group: Generalista
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/stv1/browser-HLS8/stv1.m3u8
+  country_name: Eslovaquia
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/sk/default.png
+- id: sk-stv2
+  name: STV2
+  country: SK
+  group: Generalista
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/stv2/browser-HLS8/stv2.m3u8
+  country_name: Eslovaquia
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/sk/default.png

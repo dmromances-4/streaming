@@ -1,0 +1,28 @@
+channels:
+- id: pl-tvp1
+  name: TVP 1
+  country: PL
+  group: Generalista
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/tvp1/browser-HLS8/tvp1.m3u8
+  country_name: Polonia
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/pl/default.png
+- id: pl-tvp2
+  name: TVP 2
+  country: PL
+  group: Generalista
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/tvp2/browser-HLS8/tvp2.m3u8
+  country_name: Polonia
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/pl/default.png
+- id: pl-tvpinfo
+  name: TVP Info
+  country: PL
+  group: Noticias
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/tvpinfo/browser-HLS8/tvpinfo.m3u8
+  country_name: Polonia
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/pl/default.png

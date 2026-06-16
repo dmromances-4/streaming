@@ -1,0 +1,37 @@
+channels:
+- id: se-svt1
+  name: SVT 1
+  country: SE
+  group: Generalista
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/svt1/browser-HLS8/svt1.m3u8
+  country_name: Suecia
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/se/default.png
+- id: se-svt2
+  name: SVT 2
+  country: SE
+  group: Generalista
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/svt2/browser-HLS8/svt2.m3u8
+  country_name: Suecia
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/se/default.png
+- id: se-svtbarn
+  name: SVT Barn
+  country: SE
+  group: Infantil
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/svtbarn/browser-HLS8/svtbarn.m3u8
+  country_name: Suecia
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/se/default.png
+- id: se-kunskapskanalen
+  name: Kunskapskanalen
+  country: SE
+  group: Cultura
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/kunskapskanalen/browser-HLS8/kunskapskanalen.m3u8
+  country_name: Suecia
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/se/default.png

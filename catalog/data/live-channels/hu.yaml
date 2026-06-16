@@ -1,0 +1,28 @@
+channels:
+- id: hu-m1
+  name: M1
+  country: HU
+  group: Generalista
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/m1/browser-HLS8/m1.m3u8
+  country_name: Hungría
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/hu/default.png
+- id: hu-m2
+  name: M2
+  country: HU
+  group: Infantil
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/m2/browser-HLS8/m2.m3u8
+  country_name: Hungría
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/hu/default.png
+- id: hu-m4
+  name: M4 Sport
+  country: HU
+  group: Deportes
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/m4sport/browser-HLS8/m4sport.m3u8
+  country_name: Hungría
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/hu/default.png

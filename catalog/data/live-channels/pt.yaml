@@ -1,0 +1,55 @@
+channels:
+- id: pt-rtp1
+  name: RTP 1
+  country: PT
+  group: Generalista
+  resolver: static
+  stream_url: https://streaming-live.rtp.pt/live/rtp1/rtp1.m3u8
+  country_name: Portugal
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/pt/default.png
+- id: pt-rtp2
+  name: RTP 2
+  country: PT
+  group: Generalista
+  resolver: static
+  stream_url: https://streaming-live.rtp.pt/live/rtp2/rtp2.m3u8
+  country_name: Portugal
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/pt/default.png
+- id: pt-rtp3
+  name: RTP 3
+  country: PT
+  group: Noticias
+  resolver: static
+  stream_url: https://streaming-live.rtp.pt/live/rtp3/rtp3.m3u8
+  country_name: Portugal
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/pt/default.png
+- id: pt-rtpmemoria
+  name: RTP Memória
+  country: PT
+  group: Cultura
+  resolver: static
+  stream_url: https://streaming-live.rtp.pt/live/rtpmemoria/rtpmemoria.m3u8
+  country_name: Portugal
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/pt/default.png
+- id: pt-rtpazores
+  name: RTP Açores
+  country: PT
+  group: Regional
+  resolver: static
+  stream_url: https://streaming-live.rtp.pt/live/rtpacores/rtpacores.m3u8
+  country_name: Portugal
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/pt/default.png
+- id: pt-rtpmadeira
+  name: RTP Madeira
+  country: PT
+  group: Regional
+  resolver: static
+  stream_url: https://streaming-live.rtp.pt/live/rtpmadeira/rtpmadeira.m3u8
+  country_name: Portugal
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/pt/default.png

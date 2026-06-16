@@ -1,0 +1,46 @@
+channels:
+- id: be-vrt1
+  name: VRT 1
+  country: BE
+  group: Generalista
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/vrt1/browser-HLS8/vrt1.m3u8
+  country_name: Bélgica
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/be/default.png
+- id: be-canvas
+  name: Canvas
+  country: BE
+  group: Cultura
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/canvas/browser-HLS8/canvas.m3u8
+  country_name: Bélgica
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/be/default.png
+- id: be-ketnet
+  name: Ketnet
+  country: BE
+  group: Infantil
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/ketnet/browser-HLS8/ketnet.m3u8
+  country_name: Bélgica
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/be/default.png
+- id: be-laune
+  name: La Une
+  country: BE
+  group: Generalista
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/laune/browser-HLS8/laune.m3u8
+  country_name: Bélgica
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/be/default.png
+- id: be-ladeux
+  name: La Deux
+  country: BE
+  group: Generalista
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/ladeux/browser-HLS8/ladeux.m3u8
+  country_name: Bélgica
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/be/default.png

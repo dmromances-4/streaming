@@ -1,0 +1,248 @@
+services:
+  minio:
+    image: minio/minio:latest
+    container_name: skill-minio
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    volumes:
+      - minio-data:/data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+
+  minio-init:
+    image: minio/mc:latest
+    container_name: skill-minio-init
+    depends_on:
+      minio:
+        condition: service_started
+    entrypoint: >
+      /bin/sh -c "
+      for i in 1 2 3 4 5 6 7 8 9 10; do
+        mc alias set local http://minio:9000 minioadmin minioadmin && break;
+        sleep 2;
+      done &&
+      mc mb --ignore-existing local/streaming-hls &&
+      mc anonymous set download local/streaming-hls &&
+      echo 'MinIO bucket ready'
+      "
+    restart: "no"
+
+  ingestion-torrent:
+    build:
+      context: ..
+      dockerfile: skills/ingestion-torrent/Dockerfile
+    container_name: skill-ingestion-torrent
+    restart: unless-stopped
+    environment:
+      - TORRENT_CACHE_DIR=/tmp/torrent-cache
+      - MAX_CONCURRENT_SESSIONS=3
+      - MAX_BUFFER_MB=64
+      - PEER_TIMEOUT_SECONDS=120
+      - LOG_LEVEL=INFO
+    volumes:
+      - torrent-cache:/tmp/torrent-cache
+    expose:
+      - "8001"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8001/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+
+  storage-hls:
+    build:
+      context: ..
+      dockerfile: skills/storage-hls/Dockerfile
+    container_name: skill-storage-hls
+    restart: unless-stopped
+    environment:
+      - S3_ENDPOINT=http://minio:9000
+      - S3_BUCKET=streaming-hls
+      - AWS_ACCESS_KEY_ID=minioadmin
+      - AWS_SECRET_ACCESS_KEY=minioadmin
+      - INGESTION_BASE_URL=http://ingestion-torrent:8001
+      - PUBLIC_API_BASE=http://localhost/api/hls
+      - S3_PUBLIC_BASE_URL=${S3_PUBLIC_BASE_URL:-}
+      - JOBS_DB_PATH=/data/hls-jobs.db
+      - FFMPEG_THREADS=2
+      - MAX_CONCURRENT_JOBS=2
+      - HLS_SEGMENT_DURATION=6
+      - LOG_LEVEL=INFO
+    volumes:
+      - hls-work:/tmp/hls-jobs
+      - hls-jobs-data:/data
+      - ${MEDIA_HOST_PATH:-../media}:/downloads:ro
+    expose:
+      - "8002"
+    depends_on:
+      minio-init:
+        condition: service_completed_successfully
+      ingestion-torrent:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8002/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+
+  live-sports:
+    build:
+      context: ..
+      dockerfile: skills/live-sports/Dockerfile
+    container_name: skill-live-sports
+    restart: unless-stopped
+    environment:
+      - PUBLIC_API_BASE=http://localhost/api/live
+      - PROXY_TIMEOUT_SECONDS=30
+      - BLOCK_PRIVATE_IPS=true
+      - VPN_REQUIRED=false
+      - LOG_LEVEL=INFO
+    expose:
+      - "8003"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8003/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: skill-prowlarr
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Madrid
+    volumes:
+      - prowlarr-config:/config
+    ports:
+      - "9696:9696"
+
+  jackett:
+    profiles: ["jackett"]
+    image: lscr.io/linuxserver/jackett:latest
+    container_name: skill-jackett
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Madrid
+    volumes:
+      - jackett-config:/config
+    ports:
+      - "9117:9117"
+
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: skill-qbittorrent
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Madrid
+      - WEBUI_PORT=8080
+    volumes:
+      - ${MEDIA_HOST_PATH:-../media}:/downloads
+      - qbittorrent-config:/config
+    ports:
+      - "8080:8080"
+
+  catalog-metadata:
+    build:
+      context: ..
+      dockerfile: skills/catalog-metadata/Dockerfile
+    container_name: skill-catalog-metadata
+    restart: unless-stopped
+    environment:
+      - DATABASE_PATH=/data/catalog.db
+      - SEED_DIR=/app/catalog/data/seed
+      - COCKTAILS_DIR=/app/catalog/data/cocktails
+      - INDEXER_PROVIDER=${INDEXER_PROVIDER:-prowlarr}
+      - INDEXER_URL=${INDEXER_URL:-http://prowlarr:9696}
+      - INDEXER_API_KEY=${INDEXER_API_KEY:-}
+      - JACKETT_URL=http://jackett:9117
+      - JACKETT_API_KEY=${JACKETT_API_KEY:-}
+      - TMDB_API_KEY=${TMDB_API_KEY:-}
+      - TMDB_LANGUAGE=es-ES
+      - INGEST_MODE=${INGEST_MODE:-auto}
+      - QBITTORRENT_URL=http://qbittorrent:8080
+      - QBITTORRENT_USER=admin
+      - QBITTORRENT_PASS=${QBITTORRENT_PASS:-adminadmin}
+      - INGESTION_BASE_URL=http://ingestion-torrent:8001
+      - STORAGE_HLS_BASE_URL=http://storage-hls:8002
+      - PUBLIC_HLS_BASE=http://localhost/api/hls
+      - BATCH_CONCURRENCY=2
+      - LOG_LEVEL=INFO
+    volumes:
+      - catalog-data:/data
+      - torrent-downloads:/downloads:ro
+    expose:
+      - "8004"
+    depends_on:
+      prowlarr:
+        condition: service_started
+      qbittorrent:
+        condition: service_started
+      ingestion-torrent:
+        condition: service_healthy
+      storage-hls:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8004/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+
+  frontend-view:
+    build:
+      context: ..
+      dockerfile: skills/frontend-view/Dockerfile
+    container_name: skill-frontend-view
+    restart: unless-stopped
+    expose:
+      - "80"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://localhost/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: skill-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ${MEDIA_HOST_PATH:-../media}:/downloads:ro
+    depends_on:
+      ingestion-torrent:
+        condition: service_healthy
+      storage-hls:
+        condition: service_healthy
+      live-sports:
+        condition: service_healthy
+      catalog-metadata:
+        condition: service_healthy
+      frontend-view:
+        condition: service_healthy
+
+volumes:
+  torrent-cache:
+  torrent-downloads:
+  minio-data:
+  hls-work:
+  hls-jobs-data:
+  jackett-config:
+  prowlarr-config:
+  qbittorrent-config:
+  catalog-data:

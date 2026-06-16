@@ -1,0 +1,11 @@
+title_id: movie-american-pulp-fiction
+cocktails:
+  - id: five-dollar-shake
+    name: Five Dollar Shake
+    ingredients: [vanilla, leche, whisky]
+    scene: "En el Jack Rabbit Slim's Twist"
+    timestamp_seconds: 4200
+    recipe:
+      - "1 scoop vainilla"
+      - "Leche espumada"
+      - "Servir en vaso alto"

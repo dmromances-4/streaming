@@ -1,0 +1,13 @@
+title_id: movie-european-007-casino-royale
+cocktails:
+  - id: vesper-martini
+    name: Vesper Martini
+    ingredients: [gin, vodka, vermut, lillet]
+    scene: "Bond pide el Vesper en la mesa de poker"
+    timestamp_seconds: 3720
+    recipe:
+      - "3 cl gin Gordon's"
+      - "1 cl vodka"
+      - "0.5 cl Lillet Blanc"
+      - "Shake con hielo, servir en copa coupe"
+      - "Decorar con piel de limón"

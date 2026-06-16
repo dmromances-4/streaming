@@ -1,0 +1,10 @@
+channels:
+- id: lu-rtl
+  name: RTL Télé Lëtzebuerg
+  country: LU
+  group: Generalista
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/rtltele/browser-HLS8/rtltele.m3u8
+  country_name: Luxemburgo
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/lu/default.png

@@ -1,0 +1,12 @@
+title_id: movie-european-la-dolce-vita
+cocktails:
+  - id: negroni
+    name: Negroni
+    ingredients: [gin, vermut, campari]
+    scene: "Terrazas romanas"
+    timestamp_seconds: 3300
+    recipe:
+      - "3 cl gin"
+      - "3 cl vermut rosso"
+      - "3 cl Campari"
+      - "Mezclar en vaso bajo con hielo"

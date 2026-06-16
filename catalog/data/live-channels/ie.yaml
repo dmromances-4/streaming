@@ -1,0 +1,28 @@
+channels:
+- id: ie-rte1
+  name: RTÉ One
+  country: IE
+  group: Generalista
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/rte1/browser-HLS8/rte1.m3u8
+  country_name: Irlanda
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/ie/default.png
+- id: ie-rte2
+  name: RTÉ2
+  country: IE
+  group: Generalista
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/rte2/browser-HLS8/rte2.m3u8
+  country_name: Irlanda
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/ie/default.png
+- id: ie-rtenews
+  name: RTÉ News
+  country: IE
+  group: Noticias
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/rtenews/browser-HLS8/rtenews.m3u8
+  country_name: Irlanda
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/ie/default.png

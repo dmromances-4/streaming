@@ -1,0 +1,10 @@
+channels:
+- id: cy-rik
+  name: RIK 1
+  country: CY
+  group: Generalista
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/rik1/browser-HLS8/rik1.m3u8
+  country_name: Chipre
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/cy/default.png

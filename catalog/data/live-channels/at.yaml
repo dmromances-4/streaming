@@ -1,0 +1,37 @@
+channels:
+- id: at-orf1
+  name: ORF 1
+  country: AT
+  group: Generalista
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/orf1/browser-HLS8/orf1.m3u8
+  country_name: Austria
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/at/default.png
+- id: at-orf2
+  name: ORF 2
+  country: AT
+  group: Generalista
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/orf2/browser-HLS8/orf2.m3u8
+  country_name: Austria
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/at/default.png
+- id: at-orf3
+  name: ORF III
+  country: AT
+  group: Cultura
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/orf3/browser-HLS8/orf3.m3u8
+  country_name: Austria
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/at/default.png
+- id: at-3sat
+  name: 3sat
+  country: AT
+  group: Cultura
+  resolver: static
+  stream_url: https://zdf-hls-18.akamaized.net/hls/live/2016501/dach/high/master.m3u8
+  country_name: Austria
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/at/default.png

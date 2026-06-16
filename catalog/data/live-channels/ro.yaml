@@ -1,0 +1,28 @@
+channels:
+- id: ro-tvr1
+  name: TVR 1
+  country: RO
+  group: Generalista
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/tvr1/browser-HLS8/tvr1.m3u8
+  country_name: Rumanía
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/ro/default.png
+- id: ro-tvr2
+  name: TVR 2
+  country: RO
+  group: Generalista
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/tvr2/browser-HLS8/tvr2.m3u8
+  country_name: Rumanía
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/ro/default.png
+- id: ro-tvr3
+  name: TVR 3
+  country: RO
+  group: Regional
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/tvr3/browser-HLS8/tvr3.m3u8
+  country_name: Rumanía
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/ro/default.png

@@ -1,0 +1,64 @@
+channels:
+- id: it-rai1
+  name: Rai 1
+  country: IT
+  group: Generalista
+  resolver: rai
+  slug: rai-1
+  country_name: Italia
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/it/default.png
+- id: it-rai2
+  name: Rai 2
+  country: IT
+  group: Generalista
+  resolver: rai
+  slug: rai-2
+  country_name: Italia
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/it/default.png
+- id: it-rai3
+  name: Rai 3
+  country: IT
+  group: Generalista
+  resolver: rai
+  slug: rai-3
+  country_name: Italia
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/it/default.png
+- id: it-rainews24
+  name: Rai News 24
+  country: IT
+  group: Noticias
+  resolver: rai
+  slug: rainews24
+  country_name: Italia
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/it/default.png
+- id: it-raisport
+  name: Rai Sport
+  country: IT
+  group: Deportes
+  resolver: rai
+  slug: raisport
+  country_name: Italia
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/it/default.png
+- id: it-raiscuola
+  name: Rai Scuola
+  country: IT
+  group: Cultura
+  resolver: rai
+  slug: raiscuola
+  country_name: Italia
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/it/default.png
+- id: it-raistoria
+  name: Rai Storia
+  country: IT
+  group: Cultura
+  resolver: rai
+  slug: raistoria
+  country_name: Italia
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/it/default.png

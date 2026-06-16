@@ -1,0 +1,11 @@
+title_id: movie-american-scarface
+cocktails:
+  - id: cuba-libre
+    name: Cuba Libre
+    ingredients: [ron, cola, lima]
+    scene: "Miami nightlife"
+    timestamp_seconds: 3000
+    recipe:
+      - "5 cl ron blanco"
+      - "Cola al gusto"
+      - "Hielo y lima exprimida"

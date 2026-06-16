@@ -1,0 +1,37 @@
+channels:
+- id: ch-srf1
+  name: SRF 1
+  country: CH
+  group: Generalista
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/srf1/browser-HLS8/srf1.m3u8
+  country_name: Suiza
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/ch/default.png
+- id: ch-srf2
+  name: SRF 2
+  country: CH
+  group: Generalista
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/srf2/browser-HLS8/srf2.m3u8
+  country_name: Suiza
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/ch/default.png
+- id: ch-rsi
+  name: RSI La 1
+  country: CH
+  group: Regional
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/rsila1/browser-HLS8/rsila1.m3u8
+  country_name: Suiza
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/ch/default.png
+- id: ch-rts1
+  name: RTS Un
+  country: CH
+  group: Regional
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/rtsun/browser-HLS8/rtsun.m3u8
+  country_name: Suiza
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/ch/default.png

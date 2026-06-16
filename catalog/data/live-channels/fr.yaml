@@ -1,0 +1,64 @@
+channels:
+- id: fr-arte-fr
+  name: ARTE Français
+  country: FR
+  group: Cultura
+  resolver: static
+  stream_url: https://artesimulcast.akamaized.net/hls/live/2031003/artelive_fr/master.m3u8
+  country_name: Francia
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/fr/default.png
+- id: fr-france2
+  name: France 2
+  country: FR
+  group: Generalista
+  resolver: france_tv
+  channel_uuid: SIMULCAST_FRANCE2
+  country_name: Francia
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/fr/default.png
+- id: fr-france3
+  name: France 3
+  country: FR
+  group: Generalista
+  resolver: france_tv
+  channel_uuid: SIMULCAST_FRANCE3
+  country_name: Francia
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/fr/default.png
+- id: fr-france5
+  name: France 5
+  country: FR
+  group: Cultura
+  resolver: france_tv
+  channel_uuid: SIMULCAST_FRANCE5
+  country_name: Francia
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/fr/default.png
+- id: fr-franceinfo
+  name: franceinfo
+  country: FR
+  group: Noticias
+  resolver: france_tv
+  channel_uuid: SIMULCAST_FRANCEINFO
+  country_name: Francia
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/fr/default.png
+- id: fr-lcp
+  name: LCP
+  country: FR
+  group: Parlamento
+  resolver: france_tv
+  channel_uuid: SIMULCAST_LCP
+  country_name: Francia
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/fr/default.png
+- id: fr-public-senat
+  name: Public Sénat
+  country: FR
+  group: Parlamento
+  resolver: france_tv
+  channel_uuid: SIMULCAST_PUBLIC_SENAT
+  country_name: Francia
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/fr/default.png

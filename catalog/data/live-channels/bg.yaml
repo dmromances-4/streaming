@@ -1,0 +1,19 @@
+channels:
+- id: bg-bnt1
+  name: BNT 1
+  country: BG
+  group: Generalista
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/bnt1/browser-HLS8/bnt1.m3u8
+  country_name: Bulgaria
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/bg/default.png
+- id: bg-bnt2
+  name: BNT 2
+  country: BG
+  group: Generalista
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/bnt2/browser-HLS8/bnt2.m3u8
+  country_name: Bulgaria
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/bg/default.png

@@ -1,0 +1,10 @@
+channels:
+- id: is-ruv
+  name: RÚV
+  country: IS
+  group: Generalista
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/ruv/browser-HLS8/ruv.m3u8
+  country_name: Islandia
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/is/default.png

@@ -1,0 +1,28 @@
+channels:
+- id: fi-yle1
+  name: Yle TV1
+  country: FI
+  group: Generalista
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/yletv1/browser-HLS8/yletv1.m3u8
+  country_name: Finlandia
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/fi/default.png
+- id: fi-yle2
+  name: Yle TV2
+  country: FI
+  group: Generalista
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/yletv2/browser-HLS8/yletv2.m3u8
+  country_name: Finlandia
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/fi/default.png
+- id: fi-yleteema
+  name: Yle Teema
+  country: FI
+  group: Cultura
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/yleteema/browser-HLS8/yleteema.m3u8
+  country_name: Finlandia
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/fi/default.png

@@ -1,0 +1,115 @@
+channels:
+- id: uk-bbcone
+  name: BBC One
+  country: GB
+  group: Generalista
+  resolver: bbc_iplayer
+  vpid: bbc_one
+  requires_vpn: true
+  geo_country: GB
+  auth_provider: bbc
+  drm: widevine
+  country_name: Reino Unido
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/gb/default.png
+- id: uk-bbctwo
+  name: BBC Two
+  country: GB
+  group: Generalista
+  resolver: bbc_iplayer
+  vpid: bbc_two
+  requires_vpn: true
+  geo_country: GB
+  auth_provider: bbc
+  drm: widevine
+  country_name: Reino Unido
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/gb/default.png
+- id: uk-bbcthree
+  name: BBC Three
+  country: GB
+  group: Temático
+  resolver: bbc_iplayer
+  vpid: bbc_three
+  requires_vpn: true
+  geo_country: GB
+  auth_provider: bbc
+  drm: widevine
+  country_name: Reino Unido
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/gb/default.png
+- id: uk-bbcfour
+  name: BBC Four
+  country: GB
+  group: Cultura
+  resolver: bbc_iplayer
+  vpid: bbc_four
+  requires_vpn: true
+  geo_country: GB
+  auth_provider: bbc
+  drm: widevine
+  country_name: Reino Unido
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/gb/default.png
+- id: uk-cbbc
+  name: CBBC
+  country: GB
+  group: Infantil
+  resolver: bbc_iplayer
+  vpid: cbbc
+  requires_vpn: true
+  geo_country: GB
+  auth_provider: bbc
+  drm: widevine
+  country_name: Reino Unido
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/gb/default.png
+- id: uk-cbeebies
+  name: CBeebies
+  country: GB
+  group: Infantil
+  resolver: bbc_iplayer
+  vpid: cbeebies
+  requires_vpn: true
+  geo_country: GB
+  auth_provider: bbc
+  drm: widevine
+  country_name: Reino Unido
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/gb/default.png
+- id: uk-bbcnews
+  name: BBC News
+  country: GB
+  group: Noticias
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/bbcnews/browser-HLS8/bbcnews.m3u8
+  country_name: Reino Unido
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/gb/default.png
+- id: uk-bbcparliament
+  name: BBC Parliament
+  country: GB
+  group: Parlamento
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/bbcparliament/browser-HLS8/bbcparliament.m3u8
+  country_name: Reino Unido
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/gb/default.png
+- id: uk-channel4
+  name: Channel 4
+  country: GB
+  group: Generalista
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/channel4/browser-HLS8/channel4.m3u8
+  country_name: Reino Unido
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/gb/default.png
+- id: uk-channel5
+  name: Channel 5
+  country: GB
+  group: Generalista
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/channel5/browser-HLS8/channel5.m3u8
+  country_name: Reino Unido
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/gb/default.png

@@ -1,0 +1,11 @@
+title_id: movie-european-otra-ronda
+cocktails:
+  - id: gin-tonic
+    name: Gin Tonic
+    ingredients: [gin, tonica, limon]
+    scene: "Experimentos con alcohol en el laboratorio"
+    timestamp_seconds: 1500
+    recipe:
+      - "5 cl gin"
+      - "Tónica premium"
+      - "Hielo y limón"

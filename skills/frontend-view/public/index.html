@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Streaming Platform</title>
+  <link rel="stylesheet" href="/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.15/dist/hls.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/webtorrent@2.4.0/webtorrent.min.js"></script>
+</head>
+<body>
+  <header class="header">
+    <h1>Streaming Platform</h1>
+    <p class="subtitle">Películas · Series · Deportes en vivo · Modo Cóctel</p>
+  </header>
+
+  <nav class="tabs" role="tablist">
+    <button class="tab active" data-tab="catalog" role="tab">Catálogo</button>
+    <button class="tab" data-tab="torrent" role="tab">Torrent / VOD</button>
+    <button class="tab" data-tab="p2p" role="tab">Preview P2P</button>
+    <button class="tab" data-tab="live" role="tab">Deportes en vivo</button>
+    <button class="tab" data-tab="hls" role="tab">HLS directo</button>
+  </nav>
+
+  <main>
+    <section id="panel-catalog" class="panel active">
+      <div class="card">
+        <h2>Catálogo</h2>
+        <div class="filters">
+          <select id="filter-type">
+            <option value="">Tipo: todos</option>
+            <option value="series">Series</option>
+            <option value="movie">Películas</option>
+          </select>
+          <select id="filter-origin">
+            <option value="">Origen: todos</option>
+            <option value="american">Americana</option>
+            <option value="european">Europea</option>
+            <option value="spanish">Española</option>
+            <option value="catalan">Catalana</option>
+          </select>
+          <select id="filter-status">
+            <option value="">Estado: todos</option>
+            <option value="ready">Listo</option>
+            <option value="catalog">Pendiente</option>
+            <option value="failed">Fallido</option>
+          </select>
+          <select id="filter-ingredient">
+            <option value="">Bebida: todas</option>
+          </select>
+          <label class="checkbox-label">
+            <input type="checkbox" id="filter-cocteleria" /> Coctelería
+          </label>
+        </div>
+        <div class="admin-actions">
+          <button id="btn-import" class="btn">Importar seed</button>
+          <button id="btn-enrich" class="btn">Enriquecer TMDB</button>
+          <button id="btn-resolve" class="btn">Resolver magnets</button>
+          <button id="btn-batch-ingest" class="btn primary">Ingestar Coctelería</button>
+        </div>
+        <div id="catalog-stats" class="status"></div>
+        <div id="catalog-grid" class="catalog-grid"></div>
+      </div>
+
+      <div id="series-detail" class="series-detail hidden" aria-hidden="true">
+        <div class="series-detail-inner card">
+          <button id="btn-series-close" class="btn btn-sm" type="button">← Volver</button>
+          <div id="series-header" class="series-header"></div>
+          <div class="series-actions">
+            <button id="btn-sync-episodes" class="btn">Sincronizar episodios (TMDB)</button>
+            <button id="btn-resolve-season" class="btn">Resolver magnets temporada</button>
+          </div>
+          <div id="series-status" class="status"></div>
+          <div class="season-picker">
+            <label for="season-select">Temporada</label>
+            <select id="season-select"></select>
+          </div>
+          <div id="episode-list" class="episode-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="panel-torrent" class="panel">
+      <div class="card">
+        <h2>Ingesta por Magnet</h2>
+        <label for="magnet-input">Magnet URI</label>
+        <input id="magnet-input" type="text" placeholder="magnet:?xt=urn:btih:..." />
+        <button id="btn-ingest" class="btn primary">Ingestar y transcodificar</button>
+        <div id="torrent-status" class="status"></div>
+      </div>
+    </section>
+
+    <section id="panel-p2p" class="panel">
+      <div class="card">
+        <h2>Preview P2P (WebTorrent)</h2>
+        <label for="p2p-magnet-input">Magnet URI</label>
+        <input id="p2p-magnet-input" type="text" placeholder="magnet:?xt=urn:btih:..." />
+        <button id="btn-p2p-play" class="btn primary">Reproducir en navegador</button>
+        <p class="hint">Preview local vía P2P. No sustituye el pipeline HLS del catálogo.</p>
+        <div id="p2p-status" class="status"></div>
+      </div>
+    </section>
+
+    <section id="panel-live" class="panel">
+      <div class="card">
+        <h2>Stream en vivo (M3U8)</h2>
+        <label for="live-url-input">URL del playlist M3U8</label>
+        <input id="live-url-input" type="url" placeholder="https://example.com/live/playlist.m3u8" />
+        <button id="btn-live-play" class="btn primary">Reproducir en vivo</button>
+        <p class="hint">El proxy limpia CORS y reescribe segmentos automáticamente.</p>
+      </div>
+    </section>
+
+    <section id="panel-hls" class="panel">
+      <div class="card">
+        <h2>Reproducir job HLS</h2>
+        <label for="job-id-input">Job ID (Skill #2)</label>
+        <input id="job-id-input" type="text" placeholder="uuid del job transcode" />
+        <button id="btn-hls-play" class="btn primary">Cargar manifest</button>
+      </div>
+    </section>
+
+    <section class="player-section">
+      <div class="card player-card">
+        <div class="player-toolbar">
+          <h2>Reproductor</h2>
+          <button id="btn-cocktail-manual" class="btn btn-sm hidden">Ver receta</button>
+        </div>
+        <video id="video-player" controls playsinline></video>
+        <div id="player-status" class="status"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span>Skills: Catalog · Ingest · HLS · Live · View</span>
+    <span class="tmdb-attribution">Metadatos por TMDB</span>
+  </footer>
+
+  <script src="/js/cocktail-mode.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>

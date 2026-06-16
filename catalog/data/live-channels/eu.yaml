@@ -1,0 +1,46 @@
+channels:
+- id: eu-euronews
+  name: Euronews
+  country: EU
+  group: Noticias
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/euronews/browser-HLS8/euronews.m3u8
+  country_name: Europa
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/eu/default.png
+- id: eu-euronews-en
+  name: Euronews English
+  country: EU
+  group: Noticias
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/euronewsen/browser-HLS8/euronewsen.m3u8
+  country_name: Europa
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/eu/default.png
+- id: eu-france24-en
+  name: France 24 English
+  country: EU
+  group: Noticias
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/france24en/browser-HLS8/france24en.m3u8
+  country_name: Europa
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/eu/default.png
+- id: eu-france24-fr
+  name: France 24 Français
+  country: EU
+  group: Noticias
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/france24fr/browser-HLS8/france24fr.m3u8
+  country_name: Europa
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/eu/default.png
+- id: eu-dw-en
+  name: DW English
+  country: EU
+  group: Internacional
+  resolver: static
+  stream_url: https://dwamdstream102.akamaized.net/hls/live/2015525/dwstream102/index.m3u8
+  country_name: Europa
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/eu/default.png

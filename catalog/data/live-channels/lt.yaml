@@ -1,0 +1,19 @@
+channels:
+- id: lt-lrt
+  name: LRT
+  country: LT
+  group: Generalista
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/lrt/browser-HLS8/lrt.m3u8
+  country_name: Lituania
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/lt/default.png
+- id: lt-lrtplius
+  name: LRT Plius
+  country: LT
+  group: Cultura
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/lrtplius/browser-HLS8/lrtplius.m3u8
+  country_name: Lituania
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/lt/default.png

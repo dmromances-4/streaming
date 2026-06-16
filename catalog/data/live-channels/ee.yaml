@@ -1,0 +1,19 @@
+channels:
+- id: ee-err
+  name: ETV
+  country: EE
+  group: Generalista
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/etv/browser-HLS8/etv.m3u8
+  country_name: Estonia
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/ee/default.png
+- id: ee-err2
+  name: ETV2
+  country: EE
+  group: Generalista
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/etv2/browser-HLS8/etv2.m3u8
+  country_name: Estonia
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/ee/default.png

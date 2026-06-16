@@ -1,0 +1,28 @@
+channels:
+- id: dk-dr1
+  name: DR1
+  country: DK
+  group: Generalista
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/dr1/browser-HLS8/dr1.m3u8
+  country_name: Dinamarca
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/dk/default.png
+- id: dk-dr2
+  name: DR2
+  country: DK
+  group: Generalista
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/dr2/browser-HLS8/dr2.m3u8
+  country_name: Dinamarca
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/dk/default.png
+- id: dk-dr-ramasjang
+  name: DR Ramasjang
+  country: DK
+  group: Infantil
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/drramasjang/browser-HLS8/drramasjang.m3u8
+  country_name: Dinamarca
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/dk/default.png

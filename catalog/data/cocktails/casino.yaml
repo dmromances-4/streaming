@@ -1,0 +1,11 @@
+title_id: movie-american-casino
+cocktails:
+  - id: vodka-tonic
+    name: Vodka Tonic
+    ingredients: [vodka, tonica]
+    scene: "Las Vegas, bar del casino"
+    timestamp_seconds: 2100
+    recipe:
+      - "5 cl vodka"
+      - "Tónica fría"
+      - "Hielo y rodaja de lima"

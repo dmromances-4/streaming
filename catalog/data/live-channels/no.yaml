@@ -1,0 +1,37 @@
+channels:
+- id: no-nrk1
+  name: NRK1
+  country: 'NO'
+  group: Generalista
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/nrk1/browser-HLS8/nrk1.m3u8
+  country_name: Noruega
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/no/default.png
+- id: no-nrk2
+  name: NRK2
+  country: 'NO'
+  group: Generalista
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/nrk2/browser-HLS8/nrk2.m3u8
+  country_name: Noruega
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/no/default.png
+- id: no-nrk3
+  name: NRK3
+  country: 'NO'
+  group: Temático
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/nrk3/browser-HLS8/nrk3.m3u8
+  country_name: Noruega
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/no/default.png
+- id: no-nrksuper
+  name: NRK Super
+  country: 'NO'
+  group: Infantil
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/nrksuper/browser-HLS8/nrksuper.m3u8
+  country_name: Noruega
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/no/default.png

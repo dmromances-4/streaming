@@ -1,0 +1,19 @@
+channels:
+- id: lv-ltv1
+  name: LTV1
+  country: LV
+  group: Generalista
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/ltv1/browser-HLS8/ltv1.m3u8
+  country_name: Letonia
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/lv/default.png
+- id: lv-ltv7
+  name: LTV7
+  country: LV
+  group: Generalista
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/ltv7/browser-HLS8/ltv7.m3u8
+  country_name: Letonia
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/lv/default.png

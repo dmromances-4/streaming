@@ -1,0 +1,28 @@
+channels:
+- id: gr-ert1
+  name: ERT 1
+  country: GR
+  group: Generalista
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/ert1/browser-HLS8/ert1.m3u8
+  country_name: Grecia
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/gr/default.png
+- id: gr-ert2
+  name: ERT 2
+  country: GR
+  group: Generalista
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/ert2/browser-HLS8/ert2.m3u8
+  country_name: Grecia
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/gr/default.png
+- id: gr-ertnews
+  name: ERT News
+  country: GR
+  group: Noticias
+  resolver: static
+  stream_url: https://viamotionhsi.netplus.ch/live/eds/ertnews/browser-HLS8/ertnews.m3u8
+  country_name: Grecia
+  enabled: true
+  logo: https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/gr/default.png

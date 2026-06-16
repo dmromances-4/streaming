@@ -1,0 +1,12 @@
+title_id: movie-american-el-gran-lebowski
+cocktails:
+  - id: white-russian
+    name: White Russian
+    ingredients: [vodka, kahlua, leche, whisky]
+    scene: "El Nota prepara su Ruso Blanco"
+    timestamp_seconds: 1800
+    recipe:
+      - "2 cl vodka"
+      - "1 cl Kahlúa"
+      - "Leche o nata al gusto"
+      - "Mezclar en vaso bajo con hielo"

@@ -1,0 +1,33 @@
+---
+description: Convenciones Skill #3 live-sports — catálogo, resolvers y proxy
+globs:
+  - skills/live-sports/**
+  - catalog/data/live-channels/**
+  - deploy/scripts/sync-european-channels.py
+  - deploy/scripts/verify-spanish-autonomic.sh
+---
+
+# Live Sports (Skill #3)
+
+## Catálogo
+
+- Fuente de verdad para canales nuevos: `deploy/scripts/sync-european-channels.py`
+- Tras editar el script, ejecutar `python3 deploy/scripts/sync-european-channels.py --write`
+- Canales sin HLS upstream fiable: `"enabled": False` en el script (no se escriben al YAML)
+- CDN con hotlink/referer: añadir `proxy_headers` (`Referer`, `Origin`)
+
+## Resolvers
+
+- Nuevo resolver: registrar en `skills/live-sports/src/resolvers/registry.py`
+- URLs dinámicas: usar `probe_manifest` de `_scrape_utils` antes de cachear
+- Brightcove: `policy_key` en `video_cloud.policy_key`; refs numéricos sin prefijo `ref:`
+
+## Proxy
+
+- `m3u8_rewriter.proxy_url(target, channel_id=...)` propaga `channel_id` a `/fetch`
+- `proxy_headers_for_channel(channel_id)` lee headers del catálogo cargado
+
+## Verify
+
+- `deploy/scripts/verify-spanish-autonomic.sh`: muestra 10 autonómicas, mínimo 25 activas ES
+- No reañadir canales deshabilitados (Rioja, IB3, Navarra) sin fuente HLS verificada

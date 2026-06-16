@@ -1,0 +1,394 @@
+channels:
+- id: rtve-la1
+  name: La 1
+  country: ES
+  group: Generalista
+  resolver: rtve
+  slug: la-1
+  logo: https://www.rtve.es/favicon.ico
+  country_name: España
+  enabled: true
+- id: rtve-la2
+  name: La 2
+  country: ES
+  group: Generalista
+  resolver: rtve
+  slug: la-2
+  logo: https://www.rtve.es/favicon.ico
+  country_name: España
+  enabled: true
+- id: rtve-24h
+  name: 24 Horas
+  country: ES
+  group: Noticias
+  resolver: rtve
+  slug: 24h
+  logo: https://www.rtve.es/favicon.ico
+  country_name: España
+  enabled: true
+- id: rtve-tdp
+  name: Teledeporte
+  country: ES
+  group: Deportes
+  resolver: rtve
+  slug: tdp
+  logo: https://www.rtve.es/favicon.ico
+  country_name: España
+  enabled: true
+- id: rtve-clan
+  name: Clan
+  country: ES
+  group: Infantil
+  resolver: rtve
+  slug: clan
+  logo: https://www.rtve.es/favicon.ico
+  country_name: España
+  enabled: true
+- id: es-ccma-tv3
+  name: TV3
+  country: ES
+  group: Autonómica · Cataluña
+  region: Cataluña
+  tags:
+  - autonomic
+  geo_country: ES
+  resolver: ccma
+  ccma_id: tv3
+  logo: https://statics.3cat.cat/img/logos/tv3_colorBgNegre.svg
+  country_name: España
+  enabled: true
+- id: es-ccma-324
+  name: 3/24
+  country: ES
+  group: Autonómica · Cataluña
+  region: Cataluña
+  tags:
+  - autonomic
+  geo_country: ES
+  resolver: ccma
+  ccma_id: '324'
+  logo: https://statics.3cat.cat/img/logos/tv3_colorBgNegre.svg
+  country_name: España
+  enabled: true
+- id: es-ccma-esport3
+  name: Esport3
+  country: ES
+  group: Autonómica · Cataluña
+  region: Cataluña
+  tags:
+  - autonomic
+  geo_country: ES
+  resolver: ccma
+  ccma_id: esport3
+  logo: https://statics.3cat.cat/img/logos/tv3_colorBgNegre.svg
+  country_name: España
+  enabled: true
+- id: es-ccma-super3
+  name: SX3
+  country: ES
+  group: Autonómica · Cataluña
+  region: Cataluña
+  tags:
+  - autonomic
+  geo_country: ES
+  resolver: ccma
+  ccma_id: super3
+  logo: https://statics.3cat.cat/img/logos/tv3_colorBgNegre.svg
+  country_name: España
+  enabled: true
+- id: es-ccma-33
+  name: El 33
+  country: ES
+  group: Autonómica · Cataluña
+  region: Cataluña
+  tags:
+  - autonomic
+  geo_country: ES
+  resolver: ccma
+  ccma_id: '33'
+  logo: https://statics.3cat.cat/img/logos/tv3_colorBgNegre.svg
+  country_name: España
+  enabled: true
+- id: es-ccma-tv3cat
+  name: TV3CAT
+  country: ES
+  group: Autonómica · Cataluña
+  region: Cataluña
+  tags:
+  - autonomic
+  geo_country: ES
+  resolver: ccma
+  ccma_id: tvc
+  logo: https://statics.3cat.cat/img/logos/tv3_colorBgNegre.svg
+  country_name: España
+  enabled: true
+- id: es-etb1
+  name: ETB 1
+  country: ES
+  group: Autonómica · País Vasco
+  region: País Vasco
+  tags:
+  - autonomic
+  geo_country: ES
+  resolver: static
+  stream_url: https://multimedia.eitb.eus/live-content/etb1hd-hls/master.m3u8
+  logo: https://www.eitb.eus/favicon.ico
+  country_name: España
+  enabled: true
+- id: es-etb2
+  name: ETB 2
+  country: ES
+  group: Autonómica · País Vasco
+  region: País Vasco
+  tags:
+  - autonomic
+  geo_country: ES
+  resolver: static
+  stream_url: https://multimedia.eitb.eus/live-content/etb2hd-hls/master.m3u8
+  logo: https://www.eitb.eus/favicon.ico
+  country_name: España
+  enabled: true
+- id: es-etb-basque
+  name: ETB Basque
+  country: ES
+  group: Autonómica · País Vasco
+  region: País Vasco
+  tags:
+  - autonomic
+  geo_country: ES
+  resolver: static
+  stream_url: https://multimedia.eitb.eus/live-content/eitbbasque-hls/master.m3u8
+  logo: https://www.eitb.eus/favicon.ico
+  country_name: España
+  enabled: true
+- id: es-csur-andalucia
+  name: Canal Sur
+  country: ES
+  group: Autonómica · Andalucía
+  region: Andalucía
+  tags:
+  - autonomic
+  geo_country: ES
+  resolver: static
+  stream_url: https://dfk2a268yviz9.cloudfront.net/v1/master/3722c60a815c199d9c0ef36c5b73da68a62b09d1/cc-ddiii1m6jt6of/CanalSurAndaluciaES.m3u8
+  logo: https://www.canalsur.es/favicon.ico
+  country_name: España
+  enabled: true
+- id: es-csur-2
+  name: Canal Sur 2
+  country: ES
+  group: Autonómica · Andalucía
+  region: Andalucía
+  tags:
+  - autonomic
+  geo_country: ES
+  resolver: static
+  stream_url: https://cdnlive.codev8.net/rtvalive/smil:channel22.smil/playlist.m3u8
+  logo: https://www.canalsur.es/favicon.ico
+  country_name: España
+  enabled: true
+- id: es-csur-noticias
+  name: Canal Sur Noticias
+  country: ES
+  group: Autonómica · Andalucía
+  region: Andalucía
+  tags:
+  - autonomic
+  geo_country: ES
+  resolver: static
+  stream_url: https://cdnlive.codev8.net/rtvalive/smil:channel42.smil/playlist.m3u8
+  logo: https://www.canalsur.es/favicon.ico
+  country_name: España
+  enabled: true
+- id: es-telemadrid
+  name: Telemadrid
+  country: ES
+  group: Autonómica · Madrid
+  region: Madrid
+  tags:
+  - autonomic
+  geo_country: ES
+  resolver: brightcove
+  brightcove_account: '6416060453001'
+  brightcove_ref: Live_Telemadrid
+  brightcove_player: 2rfYSrHC79
+  logo: https://www.telemadrid.es/favicon.ico
+  proxy_headers:
+    Referer: https://www.telemadrid.es/
+    Origin: https://www.telemadrid.es
+  country_name: España
+  enabled: true
+- id: es-telemadrid-laotra
+  name: La Otra
+  country: ES
+  group: Autonómica · Madrid
+  region: Madrid
+  tags:
+  - autonomic
+  geo_country: ES
+  resolver: brightcove
+  brightcove_account: '6416060453001'
+  brightcove_ref: Live_LaOtra
+  brightcove_player: 2rfYSrHC79
+  logo: https://www.telemadrid.es/favicon.ico
+  proxy_headers:
+    Referer: https://www.telemadrid.es/
+    Origin: https://www.telemadrid.es
+  country_name: España
+  enabled: true
+- id: es-apunt
+  name: À Punt
+  country: ES
+  group: Autonómica · Comunitat Valenciana
+  region: Comunitat Valenciana
+  tags:
+  - autonomic
+  geo_country: ES
+  resolver: brightcove
+  brightcove_account: '6057955885001'
+  brightcove_ref: '1846756479408303045'
+  brightcove_player: 91QJ7lbqkj
+  logo: https://www.apuntmedia.es/favicon.ico
+  proxy_headers:
+    Referer: https://www.apuntmedia.es/
+    Origin: https://www.apuntmedia.es
+  country_name: España
+  enabled: true
+- id: es-aragon-tv
+  name: Aragón TV
+  country: ES
+  group: Autonómica · Aragón
+  region: Aragón
+  tags:
+  - autonomic
+  geo_country: ES
+  resolver: static
+  stream_url: https://cartv.streaming.aranova.es/hls/live/aragontv_canal1.m3u8
+  logo: https://www.aragontelevision.es/favicon.ico
+  country_name: España
+  enabled: true
+- id: es-canal-extremadura
+  name: Canal Extremadura
+  country: ES
+  group: Autonómica · Extremadura
+  region: Extremadura
+  tags:
+  - autonomic
+  geo_country: ES
+  resolver: static
+  stream_url: https://canalextremadura-live.flumotion.cloud/canalextremadura/live_all/playlist.m3u8
+  logo: https://www.canalextremadura.es/favicon.ico
+  country_name: España
+  enabled: true
+- id: es-tvg
+  name: TVG
+  country: ES
+  group: Autonómica · Galicia
+  region: Galicia
+  tags:
+  - autonomic
+  geo_country: ES
+  resolver: tvg
+  logo: https://www.crtvg.es/favicon.ico
+  country_name: España
+  enabled: true
+- id: es-tvg2
+  name: TVG2
+  country: ES
+  group: Autonómica · Galicia
+  region: Galicia
+  tags:
+  - autonomic
+  geo_country: ES
+  resolver: static
+  stream_url: https://crtvg-tvg2.flumotion.cloud/playlist.m3u8
+  logo: https://www.crtvg.es/favicon.ico
+  country_name: España
+  enabled: true
+- id: es-lancelot
+  name: TV Canaria
+  country: ES
+  group: Autonómica · Canarias
+  region: Canarias
+  tags:
+  - autonomic
+  geo_country: ES
+  resolver: static
+  stream_url: https://5c0956165db0b.streamlock.net:8090/directo/_definst_/lancelot.television/master.m3u8
+  logo: https://www.lancelot.tv/favicon.ico
+  country_name: España
+  enabled: true
+- id: es-cyl-la7
+  name: La 7
+  country: ES
+  group: Autonómica · Castilla y León
+  region: Castilla y León
+  tags:
+  - autonomic
+  geo_country: ES
+  resolver: cyltv
+  cyltv_slug: la7
+  logo: https://www.cyltv.es/favicon.ico
+  country_name: España
+  enabled: true
+- id: es-7rm
+  name: 7 Región de Murcia
+  country: ES
+  group: Autonómica · Murcia
+  region: Murcia
+  tags:
+  - autonomic
+  geo_country: ES
+  resolver: murcia
+  logo: https://www.7tvregiondemurcia.es/favicon.ico
+  country_name: España
+  enabled: true
+- id: es-navarra-tv
+  name: Navarra Televisión
+  country: ES
+  group: Autonómica · Navarra
+  region: Navarra
+  tags:
+  - autonomic
+  geo_country: ES
+  resolver: navarra
+  page_url: https://www.natvplay.es/player/navarra-television/navarra-television-live
+  logo: https://www.navarratelevision.es/favicon.ico
+  country_name: España
+  enabled: true
+- id: es-tpa
+  name: TPA
+  country: ES
+  group: Autonómica · Asturias
+  region: Asturias
+  tags:
+  - autonomic
+  geo_country: ES
+  resolver: tpa
+  logo: https://www.rtpa.es/favicon.ico
+  country_name: España
+  enabled: true
+- id: es-trc
+  name: Televisión de Cantabria
+  country: ES
+  group: Autonómica · Cantabria
+  region: Cantabria
+  tags:
+  - autonomic
+  geo_country: ES
+  resolver: trc
+  logo: https://www.tvcantabria.es/favicon.ico
+  country_name: España
+  enabled: true
+- id: es-clm-cmt
+  name: Castilla-La Mancha Media
+  country: ES
+  group: Autonómica · Castilla-La Mancha
+  region: Castilla-La Mancha
+  tags:
+  - autonomic
+  geo_country: ES
+  resolver: clm
+  logo: https://www.cmmedia.es/favicon.ico
+  country_name: España
+  enabled: true

@@ -1,0 +1,40 @@
+const FLAGS: Record<string, string> = {
+  AT: "🇦🇹",
+  BE: "🇧🇪",
+  BG: "🇧🇬",
+  CH: "🇨🇭",
+  CY: "🇨🇾",
+  CZ: "🇨🇿",
+  DE: "🇩🇪",
+  DK: "🇩🇰",
+  EE: "🇪🇪",
+  ES: "🇪🇸",
+  EU: "🇪🇺",
+  FI: "🇫🇮",
+  FR: "🇫🇷",
+  GB: "🇬🇧",
+  GR: "🇬🇷",
+  HR: "🇭🇷",
+  HU: "🇭🇺",
+  IE: "🇮🇪",
+  IS: "🇮🇸",
+  IT: "🇮🇹",
+  LT: "🇱🇹",
+  LU: "🇱🇺",
+  LV: "🇱🇻",
+  MT: "🇲🇹",
+  NL: "🇳🇱",
+  NO: "🇳🇴",
+  PL: "🇵🇱",
+  PT: "🇵🇹",
+  RO: "🇷🇴",
+  SE: "🇸🇪",
+  SI: "🇸🇮",
+  SK: "🇸🇰",
+  UK: "🇬🇧",
+};
+
+export function countryFlag(code: string | null | undefined): string {
+  if (!code) return "🌍";
+  return FLAGS[code.toUpperCase()] || code.toUpperCase();
+}
