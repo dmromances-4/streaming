@@ -80,7 +80,13 @@ export interface TitlePlayResponse {
   manifest_url?: string | null;
   transcode_job_id?: string | null;
   message?: string | null;
+  stage?: string | null;
+  torrent_title?: string | null;
+  torrent_size_gb?: number | null;
+  seeders?: number | null;
 }
+
+export interface TitleAcquireResponse extends TitlePlayResponse {}
 
 export interface TitleStatusResponse {
   title_id: string;
@@ -88,6 +94,23 @@ export interface TitleStatusResponse {
   manifest_url?: string | null;
   transcode_job_id?: string | null;
   error_message?: string | null;
+  stage?: string | null;
+  message?: string | null;
+}
+
+export interface TmdbSearchResult {
+  tmdb_id: number;
+  content_type: "movie" | "series" | string;
+  title: string;
+  year?: number | null;
+  overview?: string | null;
+  poster_url?: string | null;
+  backdrop_url?: string | null;
+}
+
+export interface TmdbSearchResponse {
+  items: TmdbSearchResult[];
+  total: number;
 }
 
 export interface SystemStatus {

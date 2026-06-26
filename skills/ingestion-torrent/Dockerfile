@@ -1,13 +1,6 @@
-FROM python:3.12-slim-bookworm
+FROM python:3.11-slim-bookworm
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    libtorrent-rasterbar-dev \
-    libboost-all-dev \
-    && pip install --no-cache-dir python-libtorrent \
-    && apt-get purge -y build-essential \
-    && apt-get autoremove -y \
-    && rm -rf /var/lib/apt/lists/*
+RUN pip install --no-cache-dir libtorrent>=2.0.10
 
 WORKDIR /app
 

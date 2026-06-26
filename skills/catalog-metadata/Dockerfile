@@ -6,6 +6,7 @@ COPY shared/python /app/shared/python
 COPY catalog/data/seed /app/catalog/data/seed
 COPY catalog/data/cocktails /app/catalog/data/cocktails
 COPY catalog/data/media-aliases.yaml /app/catalog/data/media-aliases.yaml
+COPY catalog/data/torrent-search-aliases.yaml /app/catalog/data/torrent-search-aliases.yaml
 COPY skills/catalog-metadata/pyproject.toml /app/skills/catalog-metadata/
 COPY skills/catalog-metadata/src /app/skills/catalog-metadata/src
 
@@ -27,6 +28,7 @@ ENV DATABASE_PATH=/data/catalog.db
 ENV SEED_DIR=/app/catalog/data/seed
 ENV COCKTAILS_DIR=/app/catalog/data/cocktails
 ENV MEDIA_ALIASES_PATH=/app/catalog/data/media-aliases.yaml
+ENV TORRENT_SEARCH_ALIASES_PATH=/app/catalog/data/torrent-search-aliases.yaml
 
 RUN mkdir -p /data
 

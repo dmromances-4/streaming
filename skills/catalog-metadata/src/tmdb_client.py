@@ -133,6 +133,7 @@ class TmdbClient:
 
         return {
             "tmdb_id": tmdb_id,
+            "title": detail.get("title") or detail.get("name"),
             "year": year,
             "overview": detail.get("overview"),
             "poster_url": f"{img_base}{poster}" if poster else None,
@@ -186,6 +187,53 @@ class TmdbClient:
                 }
             )
         return episodes
+
+    async def search_results(
+        self,
+        query: str,
+        content_type: str | None = None,
+        *,
+        limit: int = 12,
+    ) -> list[dict[str, Any]]:
+        if not settings.tmdb_api_key:
+            return []
+        if not self._client:
+            raise UpstreamError("TMDB client not initialized")
+
+        types = (
+            [content_type]
+            if content_type in ("movie", "series")
+            else ["movie", "series"]
+        )
+        img_base = settings.tmdb_image_base.rstrip("/")
+        merged: list[dict[str, Any]] = []
+
+        for ct in types:
+            endpoint = "/search/movie" if ct == "movie" else "/search/tv"
+            try:
+                resp = await self._request("GET", endpoint, params={"query": query})
+                resp.raise_for_status()
+                results = resp.json().get("results", [])[:limit]
+            except httpx.HTTPError as exc:
+                log.warning("tmdb_search_failed", query=query[:40], type=ct, error=str(exc))
+                continue
+
+            for result in results:
+                poster = result.get("poster_path")
+                backdrop = result.get("backdrop_path")
+                merged.append(
+                    {
+                        "tmdb_id": int(result["id"]),
+                        "content_type": ct,
+                        "title": result.get("title") or result.get("name") or "",
+                        "year": _result_year(result, ct),
+                        "overview": result.get("overview"),
+                        "poster_url": f"{img_base}{poster}" if poster else None,
+                        "backdrop_url": f"{img_base}{backdrop}" if backdrop else None,
+                    }
+                )
+
+        return merged[:limit]
 
 
 _client: TmdbClient | None = None

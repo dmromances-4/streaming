@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
-import { fetchCatalog } from "../api/client";
-import type { CatalogItem } from "../api/types";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { fetchCatalog, requestTitle, searchTmdb } from "../api/client";
+import type { CatalogItem, TmdbSearchResult } from "../api/types";
 import { TitleCard } from "../components/TitleCard";
 import { CardSkeleton } from "../components/LoadingSkeleton";
 
@@ -15,8 +15,12 @@ const ORIGINS = [
 ];
 
 export function BrowsePage() {
+  const navigate = useNavigate();
   const [params, setParams] = useSearchParams();
   const [items, setItems] = useState<CatalogItem[]>([]);
+  const [tmdbItems, setTmdbItems] = useState<TmdbSearchResult[]>([]);
+  const [tmdbLoading, setTmdbLoading] = useState(false);
+  const [requestingId, setRequestingId] = useState<number | null>(null);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -81,6 +85,46 @@ export function BrowsePage() {
     };
   }, [q, type, origin, status, cocteleria, genre, offset]);
 
+  useEffect(() => {
+    if (!q || loading || items.length > 0 || offset > 0) {
+      setTmdbItems([]);
+      return;
+    }
+    let cancelled = false;
+    setTmdbLoading(true);
+    searchTmdb(
+      q,
+      type === "movie" || type === "series" ? type : undefined
+    )
+      .then((res) => {
+        if (!cancelled) setTmdbItems(res.items);
+      })
+      .catch(() => {
+        if (!cancelled) setTmdbItems([]);
+      })
+      .finally(() => {
+        if (!cancelled) setTmdbLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [q, type, loading, items.length, offset]);
+
+  async function handleRequestTmdb(item: TmdbSearchResult) {
+    setRequestingId(item.tmdb_id);
+    try {
+      const created = await requestTitle(
+        item.tmdb_id,
+        item.content_type as "movie" | "series"
+      );
+      navigate(`/title/${created.id}`);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "No se pudo solicitar el título");
+    } finally {
+      setRequestingId(null);
+    }
+  }
+
   function setFilter(key: string, value: string) {
     const n = new URLSearchParams(params);
     if (value) n.set(key, value);
@@ -131,10 +175,59 @@ export function BrowsePage() {
 
       {error && <p className="mb-4 text-sm text-red-300">{error}</p>}
 
-      {!loading && items.length === 0 && (
+      {!loading && items.length === 0 && !tmdbLoading && tmdbItems.length === 0 && (
         <p className="rounded-lg bg-stream-surface p-8 text-center text-stream-muted">
           Sin resultados{q ? ` para "${q}"` : ""}. Prueba otro término o quita filtros.
         </p>
+      )}
+
+      {!loading && items.length === 0 && (tmdbLoading || tmdbItems.length > 0) && (
+        <section className="mb-8">
+          <h2 className="mb-2 text-lg font-semibold">Buscar en TMDB</h2>
+          <p className="mb-4 text-sm text-stream-muted">
+            No está en tu catálogo local. Solicítalo para buscar torrent y descargar automáticamente.
+          </p>
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+            {tmdbLoading &&
+              Array.from({ length: 4 }).map((_, i) => (
+                <CardSkeleton key={`tmdb-sk-${i}`} />
+              ))}
+            {!tmdbLoading &&
+              tmdbItems.map((item) => (
+                <div
+                  key={`${item.content_type}-${item.tmdb_id}`}
+                  className="flex flex-col overflow-hidden rounded-lg border border-stream-border bg-stream-surface"
+                >
+                  {item.poster_url ? (
+                    <img
+                      src={item.poster_url}
+                      alt={item.title}
+                      className="aspect-[2/3] w-full object-cover"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div className="flex aspect-[2/3] items-center justify-center bg-stream-elevated text-xs text-stream-muted">
+                      Sin póster
+                    </div>
+                  )}
+                  <div className="flex flex-1 flex-col p-3">
+                    <p className="line-clamp-2 text-sm font-semibold">{item.title}</p>
+                    <p className="mt-1 text-xs text-stream-muted">
+                      {item.year ?? "—"} · {item.content_type === "series" ? "Serie" : "Película"}
+                    </p>
+                    <button
+                      type="button"
+                      disabled={requestingId === item.tmdb_id}
+                      onClick={() => handleRequestTmdb(item)}
+                      className="mt-3 rounded bg-stream-accent px-3 py-2 text-xs font-semibold text-white hover:bg-stream-accent-hover disabled:opacity-50"
+                    >
+                      {requestingId === item.tmdb_id ? "Solicitando…" : "Solicitar descarga"}
+                    </button>
+                  </div>
+                </div>
+              ))}
+          </div>
+        </section>
       )}
 
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">

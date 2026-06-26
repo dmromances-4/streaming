@@ -22,10 +22,12 @@ def _parse_entry(
         title_raw = entry
         extra_tags: list[str] = []
         extra_notes = None
+        extra_queries: list[str] = []
     elif isinstance(entry, dict) and "title" in entry:
         title_raw = entry["title"]
         extra_tags = entry.get("tags", [])
         extra_notes = entry.get("notes")
+        extra_queries = entry.get("search_queries", []) or []
     else:
         return None
 
@@ -49,6 +51,7 @@ def _parse_entry(
         "tags": tags,
         "priority": priority,
         "notes": notes,
+        "search_queries": [str(q) for q in extra_queries if q],
     }
 
 

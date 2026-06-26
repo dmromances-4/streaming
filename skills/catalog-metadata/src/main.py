@@ -27,6 +27,7 @@ from qbittorrent_client import get_qbittorrent_client  # noqa: E402
 from skill_telemetry import log, record_error  # noqa: E402
 from tmdb_client import get_tmdb_client  # noqa: E402
 from torznab_client import get_torznab_client  # noqa: E402
+from yts_client import get_yts_client  # noqa: E402
 
 
 async def _library_bootstrap_task(repo, orch) -> None:
@@ -55,6 +56,8 @@ async def lifespan(app: FastAPI):
     await torznab.start()
     tmdb = get_tmdb_client()
     await tmdb.start()
+    yts = get_yts_client()
+    await yts.start()
     qbit = get_qbittorrent_client()
     await qbit.start()
     orch = get_orchestrator(repo)
@@ -65,6 +68,7 @@ async def lifespan(app: FastAPI):
     yield
     await orch.stop()
     await qbit.stop()
+    await yts.stop()
     await tmdb.stop()
     await torznab.stop()
     log.info("skill_stopped")

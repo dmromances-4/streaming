@@ -427,6 +427,69 @@ class TorznabClient:
             return best["magnet"], None
         return None, err
 
+    async def search_movie_best(
+        self,
+        movie_title: str,
+        year: int | None = None,
+        *,
+        extra_queries: list[str] | None = None,
+    ) -> tuple[dict[str, Any] | None, str | None]:
+        clean_title = normalize_search_title(movie_title) or movie_title
+        queries: list[str] = []
+        seen_q: set[str] = set()
+
+        def add_query(q: str) -> None:
+            q = q.strip()
+            if not q or q in seen_q:
+                return
+            seen_q.add(q)
+            queries.append(q)
+
+        for q in extra_queries or []:
+            add_query(q)
+        add_query(f"{clean_title} {year} 1080p" if year else f"{clean_title} 1080p")
+        add_query(f"{clean_title} {year} WEB-DL" if year else f"{clean_title} WEB-DL")
+        add_query(f"{clean_title} {year}" if year else clean_title)
+        best_item: dict[str, Any] | None = None
+        best_score = -1.0
+        last_query = queries[-1]
+        total_raw = 0
+
+        for query in queries:
+            items = await self._search_items(query)
+            total_raw += len(items)
+            for item in items:
+                if not is_safe_torrent_title(item["title"]):
+                    continue
+                if item["seeders"] < settings.torrent_min_seeders:
+                    continue
+                score = _score_item(
+                    item["title"], item["size"], item["seeders"], "movie"
+                )
+                title_norm = _normalize_title_text(clean_title)
+                if title_norm and title_norm in _normalize_title_text(item["title"]):
+                    score += 100
+                if score > best_score:
+                    best_score = score
+                    best_item = item
+                    last_query = query
+
+        if best_item and best_score > 0:
+            log.info(
+                "torznab_movie_found",
+                movie=clean_title[:40],
+                query=last_query,
+                raw_count=total_raw,
+                best_score=best_score,
+            )
+            return best_item, None
+
+        if total_raw == 0:
+            err = f"No indexer results for {clean_title}"
+        else:
+            err = f"No matching movie torrent for {clean_title}"
+        return None, err
+
 
 _client: TorznabClient | None = None
 

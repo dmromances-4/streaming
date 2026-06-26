@@ -16,6 +16,8 @@ import type {
   SystemStatus,
   TitlePlayResponse,
   TitleStatusResponse,
+  TmdbSearchResponse,
+  TitleAcquireResponse,
 } from "./types";
 
 const CATALOG = "/api/catalog/api/v1";
@@ -125,6 +127,45 @@ export function acquireEpisode(episodeId: string): Promise<EpisodeAcquireRespons
 
 export function playMovie(titleId: string): Promise<TitlePlayResponse> {
   return request(`${CATALOG}/catalog/${titleId}/play`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: "{}",
+  });
+}
+
+export function acquireMovie(titleId: string): Promise<TitleAcquireResponse> {
+  return request(`${CATALOG}/catalog/${titleId}/acquire`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: "{}",
+  });
+}
+
+export function searchTmdb(
+  q: string,
+  type?: "movie" | "series"
+): Promise<TmdbSearchResponse> {
+  const params = new URLSearchParams({ q });
+  if (type) params.set("type", type);
+  return request(`${CATALOG}/search/tmdb?${params}`);
+}
+
+export function requestTitle(
+  tmdbId: number,
+  contentType: "movie" | "series"
+): Promise<CatalogItem> {
+  return request(`${CATALOG}/request`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ tmdb_id: tmdbId, content_type: contentType }),
+  });
+}
+
+export function requestSeason(
+  seriesId: string,
+  season: number
+): Promise<{ processed: number; success?: number; failed?: number }> {
+  return request(`${CATALOG}/catalog/${seriesId}/request-season?season=${season}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: "{}",

@@ -33,9 +33,10 @@ class CatalogRepository:
                     """
                     INSERT INTO titles (
                         id, content_type, origin, title, title_normalized,
-                        tags, priority, notes, magnet_status, pipeline_status,
+                        tags, priority, notes, search_queries,
+                        magnet_status, pipeline_status,
                         created_at, updated_at
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending', 'catalog', ?, ?)
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', 'catalog', ?, ?)
                     """,
                     (
                         row["id"],
@@ -46,6 +47,7 @@ class CatalogRepository:
                         json.dumps(row.get("tags", [])),
                         row.get("priority", 0),
                         row.get("notes"),
+                        json.dumps(row.get("search_queries", [])),
                         now,
                         now,
                     ),
@@ -199,11 +201,23 @@ class CatalogRepository:
             row = await cursor.fetchone()
             return self._row_to_dict(row) if row else None
 
+    async def get_title_by_tmdb_id(
+        self, tmdb_id: int, content_type: str
+    ) -> dict[str, Any] | None:
+        async with aiosqlite.connect(self.db_path) as db:
+            db.row_factory = aiosqlite.Row
+            cursor = await db.execute(
+                "SELECT * FROM titles WHERE tmdb_id = ? AND content_type = ? LIMIT 1",
+                (tmdb_id, content_type),
+            )
+            row = await cursor.fetchone()
+            return self._row_to_dict(row) if row else None
+
     async def update_title(self, title_id: str, **fields: Any) -> None:
         if not fields:
             return
         fields["updated_at"] = time.time()
-        for json_field in ("tags", "genres", "cast"):
+        for json_field in ("tags", "genres", "cast", "search_queries"):
             if json_field in fields and isinstance(fields[json_field], list):
                 fields[json_field] = json.dumps(fields[json_field])
 
@@ -534,7 +548,7 @@ class CatalogRepository:
 
     def _row_to_dict(self, row: aiosqlite.Row) -> dict[str, Any]:
         d = dict(row)
-        for field in ("tags", "genres", "cast"):
+        for field in ("tags", "genres", "cast", "search_queries"):
             if isinstance(d.get(field), str):
                 try:
                     d[field] = json.loads(d[field])
@@ -748,6 +762,104 @@ class CatalogRepository:
             )
             rows = await cursor.fetchall()
             return [dict(r) for r in rows]
+
+    async def list_movies_for_bulk_acquire(
+        self,
+        *,
+        origin: str | None = None,
+        limit: int | None = None,
+        skip_ready: bool = True,
+    ) -> list[dict[str, Any]]:
+        clauses = ["content_type = 'movie'"]
+        params: list[Any] = []
+        if origin:
+            clauses.append("origin = ?")
+            params.append(origin)
+        if skip_ready:
+            clauses.append(
+                "(source_path IS NULL OR TRIM(source_path) = '') "
+                "AND pipeline_status NOT IN ('ready', 'ingesting', 'transcoding', 'resolving')"
+            )
+        where = " AND ".join(clauses)
+        sql = f"SELECT * FROM titles WHERE {where} ORDER BY priority DESC, title"
+        if limit:
+            sql += " LIMIT ?"
+            params.append(limit)
+        async with aiosqlite.connect(self.db_path) as db:
+            db.row_factory = aiosqlite.Row
+            cursor = await db.execute(sql, params)
+            rows = await cursor.fetchall()
+            return [self._row_to_dict(r) for r in rows]
+
+    async def create_bulk_acquire_run(
+        self, *, content_type: str, total: int
+    ) -> int:
+        now = time.time()
+        async with aiosqlite.connect(self.db_path) as db:
+            cursor = await db.execute(
+                """
+                INSERT INTO bulk_acquire_runs
+                (content_type, total, completed, failed, skipped, status, created_at, updated_at)
+                VALUES (?, ?, 0, 0, 0, 'running', ?, ?)
+                """,
+                (content_type, total, now, now),
+            )
+            await db.commit()
+            return cursor.lastrowid or 0
+
+    async def update_bulk_acquire_run(
+        self,
+        run_id: int,
+        *,
+        completed: int | None = None,
+        failed: int | None = None,
+        skipped: int | None = None,
+        status: str | None = None,
+        error_message: str | None = None,
+    ) -> None:
+        fields: dict[str, Any] = {"updated_at": time.time()}
+        if completed is not None:
+            fields["completed"] = completed
+        if failed is not None:
+            fields["failed"] = failed
+        if skipped is not None:
+            fields["skipped"] = skipped
+        if status is not None:
+            fields["status"] = status
+        if error_message is not None:
+            fields["error_message"] = error_message
+        cols = ", ".join(f"{k} = ?" for k in fields)
+        vals = list(fields.values()) + [run_id]
+        async with aiosqlite.connect(self.db_path) as db:
+            await db.execute(
+                f"UPDATE bulk_acquire_runs SET {cols} WHERE id = ?", vals
+            )
+            await db.commit()
+
+    async def get_bulk_acquire_run(self, run_id: int) -> dict[str, Any] | None:
+        async with aiosqlite.connect(self.db_path) as db:
+            db.row_factory = aiosqlite.Row
+            cursor = await db.execute(
+                "SELECT * FROM bulk_acquire_runs WHERE id = ?", (run_id,)
+            )
+            row = await cursor.fetchone()
+            return dict(row) if row else None
+
+    async def get_latest_bulk_acquire_run(
+        self, *, content_type: str = "movie"
+    ) -> dict[str, Any] | None:
+        async with aiosqlite.connect(self.db_path) as db:
+            db.row_factory = aiosqlite.Row
+            cursor = await db.execute(
+                """
+                SELECT * FROM bulk_acquire_runs
+                WHERE content_type = ?
+                ORDER BY id DESC LIMIT 1
+                """,
+                (content_type,),
+            )
+            row = await cursor.fetchone()
+            return dict(row) if row else None
 
 
 _repo: CatalogRepository | None = None

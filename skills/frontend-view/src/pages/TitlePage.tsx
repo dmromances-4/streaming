@@ -14,6 +14,7 @@ export function TitlePage() {
   const navigate = useNavigate();
   const {
     play: playMovieFlow,
+    acquire: acquireMovieFlow,
     loading: movieLoading,
     pollStage: moviePollStage,
     elapsedSeconds: movieElapsed,
@@ -86,6 +87,8 @@ export function TitlePage() {
 
   const bg = title.backdrop_url || title.poster_url;
   const isSeries = title.content_type === "series";
+  const movieNeedsAcquire =
+    !isSeries && title.pipeline_status !== "ready" && !title.manifest_url;
 
   async function handlePlayMovie() {
     if (!id) return;
@@ -94,7 +97,8 @@ export function TitlePage() {
       navigate(`/watch/movie/${id}`);
       return;
     }
-    const manifest = await playMovieFlow(id);
+    const run = movieNeedsAcquire ? acquireMovieFlow : playMovieFlow;
+    const manifest = await run(id);
     if (manifest) navigate(`/watch/movie/${id}`);
   }
 
@@ -104,7 +108,9 @@ export function TitlePage() {
         ? `${moviePollStage} (${Math.floor(movieElapsed / 60)}:${String(movieElapsed % 60).padStart(2, "0")})`
         : moviePollStage
       : "Preparando…"
-    : "▶ Reproducir";
+    : movieNeedsAcquire
+      ? "Buscar y descargar"
+      : "▶ Reproducir";
 
   return (
     <div className="pb-16">

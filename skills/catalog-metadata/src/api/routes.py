@@ -24,6 +24,7 @@ from api.schemas import (  # noqa: E402
     EpisodeAcquireResponse,
     EpisodePlayResponse,
     EpisodeStatusResponse,
+    TitleAcquireResponse,
     TitlePlayResponse,
     TitleStatusResponse,
     ImportRequest,
@@ -33,7 +34,14 @@ from api.schemas import (  # noqa: E402
     ResolveSeasonRequest,
     SeasonSummary,
     SystemStatusResponse,
+    RequestTitleBody,
+    TmdbSearchResponse,
+    TmdbSearchResult,
+    BulkAcquireRequest,
+    BulkAcquireResponse,
+    BulkAcquireStatusResponse,
 )
+from bulk_watchlist_agent import get_bulk_agent  # noqa: E402
 from cocktail_importer import import_cocktails_dir  # noqa: E402
 from config import settings  # noqa: E402
 from db.repository import get_repository  # noqa: E402
@@ -42,7 +50,9 @@ from episode_sync import get_episode_sync  # noqa: E402
 from ingest_orchestrator import get_orchestrator  # noqa: E402
 from media_library import build_media_manifest_url, probe_episode_media  # noqa: E402
 from metadata_enricher import get_enricher  # noqa: E402
+from request_service import request_title_from_tmdb  # noqa: E402
 from seed_importer import import_seed_dir  # noqa: E402
+from tmdb_client import get_tmdb_client  # noqa: E402
 from skill_telemetry import log, titles_priority, titles_ready  # noqa: E402
 from system_status import get_system_status  # noqa: E402
 
@@ -65,6 +75,29 @@ async def metrics() -> Response:
         content=generate_latest(),
         media_type="text/plain; version=0.0.4; charset=utf-8",
     )
+
+
+@router.get("/search/tmdb", response_model=TmdbSearchResponse)
+async def search_tmdb(
+    q: str = Query(..., min_length=2),
+    type: str | None = Query(None, alias="type"),
+) -> TmdbSearchResponse:
+    content_type = type if type in ("movie", "series") else None
+    tmdb = get_tmdb_client()
+    results = await tmdb.search_results(q, content_type, limit=12)
+    items = [TmdbSearchResult(**r) for r in results]
+    return TmdbSearchResponse(items=items, total=len(items))
+
+
+@router.post("/request", response_model=CatalogItem)
+async def request_title(body: RequestTitleBody) -> CatalogItem:
+    repo = get_repository()
+    item = await request_title_from_tmdb(
+        repo,
+        tmdb_id=body.tmdb_id,
+        content_type=body.content_type,
+    )
+    return CatalogItem(**item)
 
 
 @router.post("/import", response_model=ImportResponse)
@@ -302,6 +335,43 @@ async def batch_ingest(body: BatchIngestRequest) -> BatchResult:
     return BatchResult(**result)
 
 
+@router.post("/bulk-acquire", response_model=BulkAcquireResponse)
+async def bulk_acquire(body: BulkAcquireRequest) -> BulkAcquireResponse:
+    repo = get_repository()
+    orch = get_orchestrator(repo)
+    agent = get_bulk_agent(repo, orch)
+
+    enrich_result = None
+    if body.enrich_first and not body.dry_run and body.content_type == "movie":
+        enrich_result = await agent.enrich_all_movies()
+
+    if body.content_type != "movie":
+        from errors import InvalidInputError
+
+        raise InvalidInputError("Only movie bulk acquire is supported in phase 1")
+
+    result = await agent.acquire_movies(
+        origin=body.origin,
+        limit=body.limit,
+        concurrency=body.concurrency,
+        dry_run=body.dry_run,
+    )
+    if enrich_result:
+        result["enrich"] = enrich_result
+    return BulkAcquireResponse(**result)
+
+
+@router.get("/bulk-acquire/status", response_model=BulkAcquireStatusResponse)
+async def bulk_acquire_status(
+    run_id: int | None = Query(None),
+) -> BulkAcquireStatusResponse:
+    repo = get_repository()
+    orch = get_orchestrator(repo)
+    agent = get_bulk_agent(repo, orch)
+    status = await agent.get_status(run_id=run_id)
+    return BulkAcquireStatusResponse(**status)
+
+
 @router.get("/stats")
 async def stats() -> dict:
     repo = get_repository()
@@ -406,6 +476,33 @@ async def acquire_episode(episode_id: str) -> EpisodeAcquireResponse:
     orch = get_orchestrator(repo)
     result = await orch.acquire_episode(episode_id)
     return EpisodeAcquireResponse(**result)
+
+
+@router.post("/catalog/{title_id}/acquire", response_model=TitleAcquireResponse)
+async def acquire_title(title_id: str) -> TitleAcquireResponse:
+    repo = get_repository()
+    orch = get_orchestrator(repo)
+    title = await repo.get_title(title_id)
+    if not title:
+        raise NotFoundError(f"Title {title_id} not found")
+    if title.get("content_type") == "movie":
+        result = await orch.acquire_movie(title_id)
+    else:
+        from errors import InvalidInputError
+
+        raise InvalidInputError("Use /episodes/{id}/acquire for series episodes")
+    return TitleAcquireResponse(**result)
+
+
+@router.post("/catalog/{series_id}/request-season", response_model=BatchResult)
+async def request_season(
+    series_id: str,
+    season: int = Query(..., ge=1),
+) -> BatchResult:
+    repo = get_repository()
+    orch = get_orchestrator(repo)
+    result = await orch.request_season(series_id, season)
+    return BatchResult(**result)
 
 
 @router.post("/catalog/{title_id}/play", response_model=TitlePlayResponse)

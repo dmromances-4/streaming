@@ -9,3 +9,7 @@ venv/
 /tmp/
 *.log
 .DS_Store
+
+# Downloaded media content (large binaries, copyright)
+media/
+catalog/media/

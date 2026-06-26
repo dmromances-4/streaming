@@ -36,11 +36,18 @@ class Settings(BaseSettings):
     media_source_mode: Literal["torrent", "library", "hybrid"] = "hybrid"
     torrent_min_seeders: int = 10
     torrent_prefer_hevc: bool = False
+    torrent_enable_yts_fallback: bool = True
     auto_acquire_on_play: bool = True
     media_root: str = "/media"
     media_url_base: str = ""
     media_aliases_path: str = "/app/catalog/data/media-aliases.yaml"
+    torrent_search_aliases_path: str = "/app/catalog/data/torrent-search-aliases.yaml"
     library_bootstrap_series_ids: str = ""
+
+    bulk_acquire_concurrency: int = 2
+    bulk_acquire_min_free_gb: int = 20
+    bulk_acquire_movies_only: bool = True
+    bulk_acquire_host_media_path: str = ""
 
     @property
     def bootstrap_series_id_list(self) -> list[str]:
@@ -80,7 +87,13 @@ class Settings(BaseSettings):
 
     @property
     def effective_indexer_api_key(self) -> str:
-        return self.indexer_api_key or self.jackett_api_key
+        from prowlarr_config import resolve_indexer_api_key
+
+        return resolve_indexer_api_key(self.indexer_api_key or self.jackett_api_key)
+
+    @property
+    def tmdb_enabled(self) -> bool:
+        return bool(self.tmdb_api_key and self.tmdb_api_key.strip())
 
 
 settings = Settings()

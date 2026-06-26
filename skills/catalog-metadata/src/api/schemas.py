@@ -162,11 +162,19 @@ class TitlePlayResponse(BaseModel):
     manifest_url: str | None = None
     transcode_job_id: str | None = None
     message: str | None = None
+    stage: str | None = None
+    torrent_title: str | None = None
+    torrent_size_gb: float | None = None
+    seeders: int | None = None
 
     @field_validator("manifest_url", mode="before")
     @classmethod
     def normalize_manifest(cls, v: str | None) -> str | None:
         return _normalize_manifest(v)
+
+
+class TitleAcquireResponse(TitlePlayResponse):
+    pass
 
 
 class TitleStatusResponse(BaseModel):
@@ -175,6 +183,8 @@ class TitleStatusResponse(BaseModel):
     manifest_url: str | None = None
     transcode_job_id: str | None = None
     error_message: str | None = None
+    stage: str | None = None
+    message: str | None = None
 
     @field_validator("manifest_url", mode="before")
     @classmethod
@@ -211,3 +221,58 @@ class EpisodeStatusResponse(BaseModel):
 class ResolveSeasonRequest(BaseModel):
     season_number: int | None = None
     limit: int = 42
+
+
+class TmdbSearchResult(BaseModel):
+    tmdb_id: int
+    content_type: str
+    title: str
+    year: int | None = None
+    overview: str | None = None
+    poster_url: str | None = None
+    backdrop_url: str | None = None
+
+
+class TmdbSearchResponse(BaseModel):
+    items: list[TmdbSearchResult]
+    total: int
+
+
+class RequestTitleBody(BaseModel):
+    tmdb_id: int = Field(..., ge=1)
+    content_type: str = Field(..., pattern="^(movie|series)$")
+
+
+class BulkAcquireRequest(BaseModel):
+    content_type: str = "movie"
+    origin: str | None = None
+    limit: int | None = None
+    concurrency: int | None = None
+    enrich_first: bool = True
+    dry_run: bool = False
+
+
+class BulkAcquireStatusResponse(BaseModel):
+    run_id: int | None = None
+    content_type: str | None = None
+    total: int | None = None
+    completed: int | None = None
+    failed: int | None = None
+    skipped: int | None = None
+    status: str
+    error_message: str | None = None
+    free_gb: float | None = None
+
+
+class BulkAcquireResponse(BaseModel):
+    run_id: int | None = None
+    total: int = 0
+    completed: int = 0
+    failed: int = 0
+    skipped: int = 0
+    status: str = "completed"
+    free_gb: float | None = None
+    dry_run: bool = False
+    movies: list[str] | None = None
+    enrich: dict[str, int] | None = None
+    results: list[dict] | None = None

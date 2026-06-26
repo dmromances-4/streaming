@@ -179,10 +179,22 @@ services:
       - STORAGE_HLS_BASE_URL=http://storage-hls:8002
       - PUBLIC_HLS_BASE=http://localhost/api/hls
       - BATCH_CONCURRENCY=2
+      - MEDIA_SOURCE_MODE=${MEDIA_SOURCE_MODE:-hybrid}
+      - MEDIA_ROOT=/downloads
+      - TORRENT_SEARCH_ALIASES_PATH=/app/catalog/data/torrent-search-aliases.yaml
+      - BULK_ACQUIRE_CONCURRENCY=${BULK_ACQUIRE_CONCURRENCY:-2}
+      - BULK_ACQUIRE_MIN_FREE_GB=${BULK_ACQUIRE_MIN_FREE_GB:-20}
+      - BULK_ACQUIRE_HOST_MEDIA_PATH=
+      - AUTO_ACQUIRE_ON_PLAY=${AUTO_ACQUIRE_ON_PLAY:-true}
+      - TORRENT_MIN_SEEDERS=${TORRENT_MIN_SEEDERS:-5}
+      - TORRENT_ENABLE_YTS_FALLBACK=${TORRENT_ENABLE_YTS_FALLBACK:-true}
+      - PROWLARR_CONFIG_PATH=/prowlarr-config/config.xml
+      - EPISODE_PLAY_CONCURRENCY=${EPISODE_PLAY_CONCURRENCY:-1}
       - LOG_LEVEL=INFO
     volumes:
       - catalog-data:/data
-      - torrent-downloads:/downloads:ro
+      - ${MEDIA_HOST_PATH:-../media}:/downloads:ro
+      - prowlarr-config:/prowlarr-config:ro
     expose:
       - "8004"
     depends_on:
@@ -238,7 +250,6 @@ services:
 
 volumes:
   torrent-cache:
-  torrent-downloads:
   minio-data:
   hls-work:
   hls-jobs-data:

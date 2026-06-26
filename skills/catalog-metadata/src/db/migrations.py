@@ -92,3 +92,25 @@ async def apply_migrations(db: aiosqlite.Connection) -> None:
     ):
         if col not in episode_cols:
             await db.execute(f"ALTER TABLE episodes ADD COLUMN {col} {typedef}")
+
+    cursor = await db.execute("PRAGMA table_info(titles)")
+    title_cols = {row[1] for row in await cursor.fetchall()}
+    if "search_queries" not in title_cols:
+        await db.execute("ALTER TABLE titles ADD COLUMN search_queries TEXT DEFAULT '[]'")
+
+    await db.executescript(
+        """
+        CREATE TABLE IF NOT EXISTS bulk_acquire_runs (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            content_type TEXT NOT NULL DEFAULT 'movie',
+            total INTEGER NOT NULL DEFAULT 0,
+            completed INTEGER NOT NULL DEFAULT 0,
+            failed INTEGER NOT NULL DEFAULT 0,
+            skipped INTEGER NOT NULL DEFAULT 0,
+            status TEXT NOT NULL DEFAULT 'running',
+            error_message TEXT,
+            created_at REAL NOT NULL,
+            updated_at REAL NOT NULL
+        );
+        """
+    )

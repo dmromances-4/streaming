@@ -60,6 +60,43 @@ class TorrentAcquisitionAgent:
         )
         return candidate, None
 
+    async def search_movie(
+        self,
+        movie_title: str,
+        year: int | None = None,
+        *,
+        extra_queries: list[str] | None = None,
+    ) -> tuple[TorrentCandidate | None, str | None]:
+        torznab = get_torznab_client()
+        clean = normalize_search_title(movie_title) or movie_title
+        best, err = await torznab.search_movie_best(
+            clean, year=year, extra_queries=extra_queries
+        )
+        if not best:
+            from yts_client import get_yts_client
+
+            yts = get_yts_client()
+            best, yts_err = await yts.search_movie_best(
+                clean, year=year, extra_queries=extra_queries
+            )
+            if not best:
+                return None, err or yts_err or "No se encontró torrent adecuado"
+            log.info("torrent_agent_movie_yts_fallback", movie=clean[:40])
+
+        candidate = TorrentCandidate(
+            title=best["title"],
+            magnet=best["magnet"],
+            size_bytes=int(best.get("size") or 0),
+            seeders=int(best.get("seeders") or 0),
+        )
+        log.info(
+            "torrent_agent_movie_selected",
+            movie=clean[:40],
+            torrent=candidate.title[:80],
+            seeders=candidate.seeders,
+        )
+        return candidate, None
+
 
 _agent: TorrentAcquisitionAgent | None = None
 

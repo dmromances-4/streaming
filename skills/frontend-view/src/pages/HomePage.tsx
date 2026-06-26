@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import {
   fetchCatalog,
+  fetchActiveDownloads,
   fetchLocalLibrary,
   fetchStats,
   fetchTopGenres,
   scanAllLibrary,
 } from "../api/client";
-import type { CatalogItem } from "../api/types";
+import type { ActiveDownloadItem, CatalogItem } from "../api/types";
 import { ContinueWatchingRow } from "../components/ContinueWatchingRow";
 import { LiveNowRow } from "../components/LiveNowRow";
 import { ContentRow } from "../components/ContentRow";
@@ -32,6 +34,7 @@ export function HomePage() {
   const [scanToast, setScanToast] = useState<string | null>(null);
   const [addToLibrary, setAddToLibrary] = useState<CatalogItem[]>([]);
   const [topGenres, setTopGenres] = useState<string[]>([]);
+  const [activeDownloads, setActiveDownloads] = useState<ActiveDownloadItem[]>([]);
 
   useEffect(() => {
     let cancelled = false;
@@ -58,6 +61,11 @@ export function HomePage() {
     fetchTopGenres(4)
       .then((res) => {
         if (!cancelled) setTopGenres(res.genres);
+      })
+      .catch(() => {});
+    fetchActiveDownloads()
+      .then((res) => {
+        if (!cancelled) setActiveDownloads(res.items);
       })
       .catch(() => {});
     return () => {
@@ -98,6 +106,25 @@ export function HomePage() {
         <p className="mb-4 px-4 text-sm text-stream-muted md:px-10">
           {stats.ready} títulos listos para reproducir · {stats.total} en catálogo
         </p>
+      )}
+
+      {activeDownloads.length > 0 && (
+        <section className="mx-4 mb-8 rounded-xl border border-stream-border bg-stream-surface p-4 md:mx-10">
+          <div className="mb-2 flex items-center justify-between gap-4">
+            <h2 className="text-lg font-semibold">Descargas en curso</h2>
+            <Link to="/settings" className="text-sm text-stream-accent hover:underline">
+              Ver detalles
+            </Link>
+          </div>
+          <ul className="space-y-1 text-sm text-stream-muted">
+            {activeDownloads.slice(0, 5).map((d) => (
+              <li key={d.id}>
+                S{d.season_number}E{d.episode_number}
+                {d.title ? ` · ${d.title}` : ""} — {d.pipeline_status}
+              </li>
+            ))}
+          </ul>
+        </section>
       )}
 
       {localLoading ? (

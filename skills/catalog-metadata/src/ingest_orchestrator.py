@@ -322,6 +322,303 @@ class IngestOrchestrator:
             "manifest_url": normalize_manifest_url(title.get("manifest_url")),
             "transcode_job_id": title.get("transcode_job_id"),
             "error_message": title.get("error_message"),
+            "stage": self._title_stage(title),
+            "message": self._acquire_messages.get(title_id),
+        }
+
+    def _title_stage(self, title: dict[str, Any]) -> str:
+        status = title.get("pipeline_status", "catalog")
+        if status == "resolving":
+            return "searching"
+        if status == "ingesting":
+            if title.get("magnet_status") == "resolved" and title.get("magnet_uri"):
+                return "downloading"
+            return "ingesting"
+        if status == "transcoding":
+            return "transcoding"
+        if status == "ready":
+            return "ready"
+        if status == "failed":
+            return "failed"
+        return "catalog"
+
+    async def acquire_movie(self, title_id: str) -> dict[str, Any]:
+        title = await self.repo.get_title(title_id)
+        if not title:
+            from errors import NotFoundError
+
+            raise NotFoundError(f"Title {title_id} not found")
+        if title.get("content_type") != "movie":
+            from errors import InvalidInputError
+
+            raise InvalidInputError(f"{title_id} is not a movie")
+
+        if title.get("pipeline_status") == "ready" and title.get("manifest_url"):
+            return {
+                "title_id": title_id,
+                "pipeline_status": "ready",
+                "manifest_url": normalize_manifest_url(title["manifest_url"]),
+                "transcode_job_id": title.get("transcode_job_id"),
+                "stage": "ready",
+                "message": "Already ready",
+            }
+
+        if (
+            title.get("pipeline_status") == "transcoding"
+            and title.get("transcode_job_id")
+        ):
+            completed = await self._maybe_complete_title_transcode(
+                title_id, title["transcode_job_id"]
+            )
+            if completed:
+                completed["stage"] = "ready"
+                return completed
+            return {
+                "title_id": title_id,
+                "pipeline_status": "transcoding",
+                "manifest_url": None,
+                "transcode_job_id": title.get("transcode_job_id"),
+                "stage": "transcoding",
+                "message": "Transcode en progreso",
+            }
+
+        if title_id in self._acquire_in_progress:
+            title = await self.repo.get_title(title_id)
+            return self._build_title_acquire_status_response(title_id, title)
+
+        await self.scan_movie_library(title_id)
+        title = await self.repo.get_title(title_id)
+        if title and title.get("pipeline_status") == "ready" and title.get("manifest_url"):
+            return {
+                "title_id": title_id,
+                "pipeline_status": "ready",
+                "manifest_url": normalize_manifest_url(title["manifest_url"]),
+                "stage": "ready",
+                "message": None,
+            }
+        if title and title.get("pipeline_status") == "transcoding":
+            return {
+                "title_id": title_id,
+                "pipeline_status": "transcoding",
+                "manifest_url": None,
+                "transcode_job_id": title.get("transcode_job_id"),
+                "stage": "transcoding",
+                "message": "Transcode en progreso",
+            }
+
+        source, media_type = resolve_movie_media(
+            title_id=title_id,
+            title=title["title"],
+            stored_path=title.get("source_path") if title else None,
+        )
+        if source:
+            ok = await self._ingest_title_from_file(
+                title_id, source, media_type, wait=False
+            )
+            refreshed = await self.repo.get_title(title_id)
+            return {
+                "title_id": title_id,
+                "pipeline_status": refreshed.get("pipeline_status") if refreshed else "failed",
+                "manifest_url": normalize_manifest_url(refreshed.get("manifest_url"))
+                if refreshed
+                else None,
+                "transcode_job_id": refreshed.get("transcode_job_id") if refreshed else None,
+                "stage": self._title_stage(refreshed or title or {}),
+                "message": None if ok else (refreshed.get("error_message") if refreshed else "Ingest failed"),
+            }
+
+        await self.repo.update_title(
+            title_id, pipeline_status="resolving", error_message=None
+        )
+        from torrent_search_aliases import get_search_queries_for_title
+
+        agent = get_torrent_agent()
+        queries = get_search_queries_for_title(
+            title_id,
+            title=title["title"],
+            stored_queries=title.get("search_queries"),
+        )
+        candidate, err = await agent.search_movie(
+            title["title"],
+            year=title.get("year"),
+            extra_queries=queries,
+        )
+        if not candidate:
+            await self.repo.update_title(
+                title_id,
+                pipeline_status="failed",
+                magnet_status="failed",
+                error_message=err,
+            )
+            return {
+                "title_id": title_id,
+                "pipeline_status": "failed",
+                "manifest_url": None,
+                "stage": "failed",
+                "message": err,
+            }
+
+        extra = format_acquire_response(candidate)
+        self._acquire_messages[title_id] = extra["message"]
+
+        await self.repo.update_title(
+            title_id,
+            magnet_uri=candidate.magnet,
+            magnet_status="resolved",
+            magnet_source=settings.indexer_provider,
+            pipeline_status="ingesting",
+            error_message=None,
+        )
+
+        qbit = get_qbittorrent_client()
+        try:
+            added = await qbit.add_magnet(candidate.magnet, title_id=title_id)
+            if not added:
+                raise RuntimeError("qBittorrent rejected magnet")
+            infohash = qbit._extract_hash(candidate.magnet)
+            if infohash:
+                await self.repo.update_title(title_id, qbittorrent_hash=infohash)
+        except Exception as exc:
+            await self.repo.update_title(
+                title_id,
+                pipeline_status="failed",
+                error_message=str(exc),
+            )
+            self._acquire_messages.pop(title_id, None)
+            return {
+                "title_id": title_id,
+                "pipeline_status": "failed",
+                "manifest_url": None,
+                "stage": "failed",
+                "message": str(exc),
+            }
+
+        self._acquire_in_progress.add(title_id)
+        asyncio.create_task(
+            self._complete_movie_acquire_background(title_id, candidate.magnet)
+        )
+
+        return {
+            "title_id": title_id,
+            "pipeline_status": "ingesting",
+            "manifest_url": None,
+            "transcode_job_id": None,
+            "stage": "downloading",
+            **extra,
+        }
+
+    def _build_title_acquire_status_response(
+        self, title_id: str, title: dict[str, Any] | None
+    ) -> dict[str, Any]:
+        if not title:
+            return {
+                "title_id": title_id,
+                "pipeline_status": "failed",
+                "manifest_url": None,
+                "stage": "failed",
+                "message": "Title not found",
+            }
+        return {
+            "title_id": title_id,
+            "pipeline_status": title.get("pipeline_status", "catalog"),
+            "manifest_url": normalize_manifest_url(title.get("manifest_url")),
+            "transcode_job_id": title.get("transcode_job_id"),
+            "stage": self._title_stage(title),
+            "message": self._acquire_messages.get(title_id),
+        }
+
+    async def _complete_movie_acquire_background(
+        self, title_id: str, magnet: str
+    ) -> None:
+        try:
+            qbit = get_qbittorrent_client()
+            file_path, infohash = await qbit.wait_for_complete(magnet)
+            if not file_path:
+                err = infohash or "Download failed or timed out"
+                await self.repo.update_title(
+                    title_id,
+                    pipeline_status="failed",
+                    error_message=err,
+                )
+                return
+
+            await self.repo.update_title(
+                title_id,
+                qbittorrent_hash=infohash,
+                ingest_mode="qbittorrent",
+            )
+
+            await self.scan_movie_library(title_id)
+            title = await self.repo.get_title(title_id)
+            if title and title.get("pipeline_status") not in ("ready", "transcoding"):
+                source, media_type = resolve_movie_media(
+                    title_id=title_id,
+                    title=title["title"],
+                    stored_path=title.get("source_path"),
+                )
+                if source:
+                    await self.repo.update_title(
+                        title_id,
+                        source_path=source,
+                        pipeline_status="ingesting",
+                    )
+                    self._acquire_messages[title_id] = "Transcodificando…"
+                    await self._ingest_title_from_file(
+                        title_id, source, media_type, wait=False
+                    )
+        except Exception as exc:
+            log.error(
+                "movie_acquire_background_failed",
+                title_id=title_id,
+                error=str(exc),
+            )
+            await self.repo.update_title(
+                title_id,
+                pipeline_status="failed",
+                error_message=str(exc),
+            )
+        finally:
+            self._acquire_in_progress.discard(title_id)
+
+    async def request_season(
+        self, series_id: str, season_number: int
+    ) -> dict[str, int]:
+        series = await self.repo.get_title(series_id)
+        if not series:
+            from errors import NotFoundError
+
+            raise NotFoundError(f"Series {series_id} not found")
+
+        episodes = await self.repo.list_episodes(
+            series_id, season_number=season_number
+        )
+        pending = [
+            ep
+            for ep in episodes
+            if not ep.get("source_path")
+            and ep.get("pipeline_status") != "ready"
+        ]
+        sem = asyncio.Semaphore(max(1, settings.episode_play_concurrency))
+        success = 0
+        failed = 0
+
+        async def _one(episode_id: str) -> None:
+            nonlocal success, failed
+            async with sem:
+                try:
+                    result = await self.acquire_episode(episode_id)
+                    if result.get("pipeline_status") == "failed":
+                        failed += 1
+                    else:
+                        success += 1
+                except Exception:
+                    failed += 1
+
+        await asyncio.gather(*(_one(ep["id"]) for ep in pending))
+        return {
+            "success": success,
+            "failed": failed,
+            "processed": len(pending),
         }
 
     async def resolve_episode_magnet(self, episode_id: str) -> dict[str, str]:
@@ -865,6 +1162,11 @@ class IngestOrchestrator:
             stored_path=title.get("source_path"),
         )
         if not source:
+            if (
+                settings.media_source_mode == "hybrid"
+                and settings.auto_acquire_on_play
+            ):
+                return await self.acquire_movie(title_id)
             await self.repo.update_title(
                 title_id,
                 pipeline_status="failed",
